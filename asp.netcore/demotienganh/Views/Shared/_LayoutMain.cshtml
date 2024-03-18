@@ -41,7 +41,7 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("Vocabulary", "Vocabulary", "Vocabulary")</li>
                             <li class="scroll-to-section"><a href="#courses">Grammar</a></li>
                             <!-- <li class="has-sub">
@@ -52,7 +52,7 @@
                                     <li><a href="contact-us.html">Login/Register</a></li>
                                 </ul>
                               </li> -->
-                            <li class="scroll-to-section"><a href="#testimonials">Test with me</a></li>
+                            <li>@Html.ActionLink("Test with me", "Index", "Testing")</li>
                             <!-- <li class="scroll-to-section" > -->
                             <div class="main-button-gradient">
                                 <div>@Html.ActionLink("Login/Regster", "Index", "Login")</div>
