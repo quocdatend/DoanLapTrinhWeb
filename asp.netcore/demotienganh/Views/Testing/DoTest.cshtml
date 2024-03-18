@@ -1,0 +1,77 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Vocabulary Page";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<section class="services" id="services">
+    <div class="container1">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h4>Test <em>1</em></h4>
+                </div>
+                <div class="container">
+                    <h1>Bài thi trắc nghiệm</h1>
+                    <form action="#">
+                        <div class="card">
+                            <div class="card-header">
+                                Câu hỏi 1
+                            </div>
+                            <div class="card-body">
+                                <p>Nội dung câu hỏi 1?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question1" value="a" id="question1a">
+                                    <label class="form-check-label" for="question1a">
+                                        A. Đáp án 1
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question1" value="b" id="question1b">
+                                    <label class="form-check-label" for="question1b">
+                                        B. Đáp án 2
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question1" value="c" id="question1c">
+                                    <label class="form-check-label" for="question1c">
+                                        C. Đáp án 3
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                Câu hỏi 2
+                            </div>
+                            <div class="card-body">
+                                <p>Nội dung câu hỏi 2?</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question2" value="a" id="question2a">
+                                    <label class="form-check-label" for="question2a">
+                                        A. Đáp án 1
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question2" value="b" id="question2b">
+                                    <label class="form-check-label" for="question2b">
+                                        B. Đáp án 2
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="question2" value="c" id="question2c">
+                                    <label class="form-check-label" for="question2c">
+                                        C. Đáp án 3
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary " style="background: linear-gradient(-145deg, rgba(219, 138, 222, 1) 0%, rgba(246, 191, 159, 1) 100%) !important ;    border-color: #dc3545;">@Html.ActionLink("Nộp Bài", "Result", "Testing")</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,16 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Acer\\source\\repos\\DoanLapTrinhWeb\\asp.netcore\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|c:\\users\\acer\\source\\repos\\doanlaptrinhweb\\asp.netcore\\demotienganh\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|solutionrelative:demotienganh\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|c:\\users\\acer\\source\\repos\\doanlaptrinhweb\\asp.netcore\\demotienganh\\views\\shared\\_layoutmain.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|solutionrelative:demotienganh\\views\\shared\\_layoutmain.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -18,41 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_LayoutMain.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Shared\\_LayoutMain.cshtml",
-              "RelativeDocumentMoniker": "demotienganh\\Views\\Shared\\_LayoutMain.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\source\\repos\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Shared\\_LayoutMain.cshtml",
-              "RelativeToolTip": "demotienganh\\Views\\Shared\\_LayoutMain.cshtml",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAEAAAAAoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-11T05:00:58.285Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\Acer\\source\\repos\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "demotienganh\\Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Acer\\source\\repos\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "demotienganh\\Views\\Home\\Index.cshtml",
-              "ViewState": "AQIAACQAAAAAAAAAAAAAAJwAAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-03-11T05:00:26.696Z",
-              "EditorCaption": ""
             }
           ]
         }
