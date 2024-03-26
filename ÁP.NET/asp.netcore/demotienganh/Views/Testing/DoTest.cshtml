@@ -1,0 +1,62 @@
+﻿    @*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Testing Page";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+@model List<Question>
+
+
+<section class="services" id="services">
+    <div class="container1">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h4>Test <em>1</em></h4>
+                </div>
+                <div class="container">
+                    <h1>Bài thi trắc nghiệm</h1>
+                    <form asp-action="SubmitAnswers" asp-controller="Testing" method="post">
+                        @foreach (var item in Model)
+                        {
+                            <div class="card">
+                                <div class="card-header">
+                                    @item.QuestionText
+                                </div>
+                                <div class="card-body">
+                                    <p>Nội dung câu hỏi 1?</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="a" id="">
+                                        <label class="form-check-label" for="question1a">
+                                            @item.AnswerA
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="b" id="">
+                                        <label class="form-check-label" for="question1b">
+                                            @item.AnswerB
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="c" id="">
+                                        <label class="form-check-label" for="question1c">
+                                            @item.AnswerC
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="d" id="">
+                                        <label class="form-check-label" for="question1c">
+                                            @item.AnswerD
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary " style="background: linear-gradient(-145deg, rgba(219, 138, 222, 1) 0%, rgba(246, 191, 159, 1) 100%) !important ;    border-color: #dc3545;;">Nộp bài</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

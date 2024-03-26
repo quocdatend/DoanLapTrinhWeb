@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\duyda\\OneDrive\\M\u00E1y t\u00EDnh\\laptrinhwebhutech\\DoanLapTrinhWeb\\asp.netcore\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|c:\\users\\duyda\\onedrive\\m\u00E1y t\u00EDnh\\laptrinhwebhutech\\doanlaptrinhweb\\asp.netcore\\demotienganh\\controllers\\testingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|solutionrelative:demotienganh\\controllers\\testingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|c:\\users\\duyda\\onedrive\\m\u00E1y t\u00EDnh\\laptrinhwebhutech\\doanlaptrinhweb\\asp.netcore\\demotienganh\\views\\testing\\dotest.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{710B488B-A8E4-4BCE-A691-EA4AA118B427}|demotienganh\\demotienganh.csproj|solutionrelative:demotienganh\\views\\testing\\dotest.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TestingController.cs",
+              "DocumentMoniker": "C:\\Users\\duyda\\OneDrive\\M\u00E1y t\u00EDnh\\laptrinhwebhutech\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Controllers\\TestingController.cs",
+              "RelativeDocumentMoniker": "demotienganh\\Controllers\\TestingController.cs",
+              "ToolTip": "C:\\Users\\duyda\\OneDrive\\M\u00E1y t\u00EDnh\\laptrinhwebhutech\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Controllers\\TestingController.cs",
+              "RelativeToolTip": "demotienganh\\Controllers\\TestingController.cs",
+              "ViewState": "AQIAADkAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-26T07:14:14.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DoTest.cshtml",
+              "DocumentMoniker": "C:\\Users\\duyda\\OneDrive\\M\u00E1y t\u00EDnh\\laptrinhwebhutech\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Testing\\DoTest.cshtml",
+              "RelativeDocumentMoniker": "demotienganh\\Views\\Testing\\DoTest.cshtml",
+              "ToolTip": "C:\\Users\\duyda\\OneDrive\\M\u00E1y t\u00EDnh\\laptrinhwebhutech\\DoanLapTrinhWeb\\asp.netcore\\demotienganh\\Views\\Testing\\DoTest.cshtml",
+              "RelativeToolTip": "demotienganh\\Views\\Testing\\DoTest.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-03-26T07:14:11.334Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
