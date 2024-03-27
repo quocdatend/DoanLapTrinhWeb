@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Vocabulary Page";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+@model List<Grammar>
+
+<section class="services" id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading">
+                    <h4>Grammar <em>English</em></h4>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="owl-service-item owl-carousel">
+                    @foreach (var item in Model)
+                    {
+                        <div class="item">
+                            <a asp-action="CaseGrammar" asp-controller="Grammar" asp-route-name="@item.Name">
+                                <div class="service-item">
+                                    <div class="icon">
+                                        <img src="../layoutindex/assets/images/service-icon-01.png" alt="">
+                                    </div>
+                                    <h4>@item.Name</h4>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
