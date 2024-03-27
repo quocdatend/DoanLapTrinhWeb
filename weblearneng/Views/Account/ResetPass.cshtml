@@ -1,0 +1,78 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reset Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+            input[type="submit"]:hover {
+                background-color: #3e8e41;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Reset Password</h2>
+        <form action="reset-password.php" method="POST">
+            <input type="text" name="password" id="password" placeholder="Enter your new password" required>
+            <input type="text" name="checkpass" id="checkpass" placeholder="Input your new password againt" required>
+            <input type="submit" value="Reset Password">
+        </form>
+    </div>
+</body>
+
+</html>
