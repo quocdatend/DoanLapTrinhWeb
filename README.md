@@ -1,2 +1,2 @@
 # DoanLapTrinhWeb
-!xóa lần 1
+Xây dựng web bằng ASP .NET CORE 
