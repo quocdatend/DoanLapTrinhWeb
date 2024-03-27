@@ -1,0 +1,36 @@
+﻿/*
+    - button search in vocabulary
+*/
+
+form.btn-search input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: none;
+    border-radius: 20px 0 0 20px;
+    float: left;
+    width: 80%;
+    background: #f4f7fb;
+}
+
+
+form.btn-search button {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: #e9a5be;
+    color: white;
+    font-size: 17px;
+    border: none;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+}
+
+    form.btn-search button:hover {
+        background: #e884a9;
+    }
+
+form.btn-search::after {
+    content: "";
+    clear: both;
+    display: table;
+}
