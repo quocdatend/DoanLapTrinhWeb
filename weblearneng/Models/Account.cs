@@ -11,11 +11,11 @@ public partial class Account
 
     public string Email { get; set; } = null!;
 
-    public string Pass { get; set; } = null!;
-
     public bool Role { get; set; }
 
-    public virtual ICollection<Score> Scores { get; set; } = new List<Score>();
+    public string Pass { get; set; } = null!;
+
+    public virtual ICollection<ExamHistory> ExamHistories { get; set; } = new List<ExamHistory>();
 
     public virtual ICollection<Testgrammar> Testgrammars { get; set; } = new List<Testgrammar>();
 

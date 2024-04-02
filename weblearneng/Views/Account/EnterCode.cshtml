@@ -5,15 +5,12 @@
     Layout = null;
 }
 
-@model List<Account>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password Form</title>
-
     <style>
         body {
             font-family: sans-serif;
@@ -57,7 +54,7 @@
                 color: #4a4a4a;
             }
 
-            .form-field input[type=email] {
+            .form-field input[type=text] {
                 width: 100%;
                 padding: 10px;
                 font-size: 14px;
@@ -83,27 +80,27 @@
 </head>
 <body>
     <div class="container">
-        <h1>Forgot Password</h1>
-        <p>Enter your email address and we'll send you a code reset link!</p>
+        <h1>Enter Code</h1>
+        <p>Enter code from email address when we'll send you a code reset link!</p>
         <form id="forgot-password-form">
-            <div class="form-field">
-                <label for="email">Email Address:</label>
-                <input type="email" name="email" id="email" value="@ViewBag.Email" required>
-            </div>
-            @if (ViewBag.Email != null && ViewBag.isTrue)
+            
+            @if (ViewBag.Passcode == ViewBag.Newcode && ViewBag.Passcode != null)
             {
                 <h5>Xác nhận thành công!</h5>
-				<button type="submit" id="btnSubmit" asp-action="EnterCode" asp-controller="Account">Click here!</button>
-            } else
-            {
-               <button type="submit" id="btnSubmit">Send Password Reset Link</button> 
+                <button type="submit" id="btnSubmit" asp-action="ResetPass" asp-controller="Account">Cick here!</button>
             }
-            
+            else
+            {
+                <div class="form-field">
+                    <label>Enter code:</label>
+                    <input type="text" name="passcode" id="passcode" placeholder="Code..">
+                </div>
+                <h5>@ViewBag.Code</h5>
+                <h5>@ViewBag.Error</h5>
+                <button type="submit" id="btnSubmit">Send Code Reset Link</button>
+            }
         </form>
-        @if (@ViewBag.Email != null && !ViewBag.isTrue)
-        {
-            <h5>Email chưa được đăng ký!</h5>
-        }
+        
     </div>
 </body>
 </html>
