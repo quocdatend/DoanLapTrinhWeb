@@ -17,8 +17,6 @@ public partial class UserResponse
 
     public int? IsCorrect { get; set; }
 
-    public virtual Exam? Exam { get; set; }
-
     public virtual Question? Question { get; set; }
 
     public virtual Account? User { get; set; }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Runtime.Intrinsics.Arm;
 
 namespace demotienganh.Controllers
 {
@@ -58,24 +59,9 @@ namespace demotienganh.Controllers
             return View();
         }
 
-        /*
-                public IActionResult Signup(string name, string email, string pass, string re_pass)
-                {
-                    SqlCommand cmd = new SqlCommand("add_account_from_user", con);
-                    Account lstAccount = new Account();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Name", lstAccount.Name);
-                    cmd.Parameters.AddWithValue("@Email", lstAccount.Email);
-                    cmd.Parameters.AddWithValue("@Pass", lstAccount.Pass);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    return View();
-                }
-        */
-
         public IActionResult ForgetPass(string email)
         {
+            ViewBag.isTrue = false;
             var lstAccount = db.Accounts.ToList();
             foreach (var account in lstAccount)
             {
@@ -86,15 +72,61 @@ namespace demotienganh.Controllers
             }
             if (ViewBag.Email == email && email != null)
             {
-                return View("ResetPass", "Account");
+                ViewBag.isTrue = true;
+                ForgetPass();
+                return View();
             }
             ViewBag.Email = email;
             return View();
         }
 
-        public IActionResult ResetPass(string checkpass, string password)
+        [HttpPost]
+        public IActionResult ForgetPass()
         {
+            TempData["code"] = RandomCode(); // not use this
+            string newcode = RandomCode();
+            HttpContext.Session.SetString("code", newcode);
+            // Gui email tai day
+            return RedirectToAction("EnterCode"); // and this 
+        }
 
+        public IActionResult EnterCode(string? passcode, string code)
+        {
+            string newcode = HttpContext.Session.GetString("code");
+            ViewBag.Code = newcode;
+
+            if (passcode == newcode && passcode != null)
+            {
+                ViewBag.Passcode = newcode;
+                ViewBag.Newcode = newcode;
+            }
+            
+            if(passcode != null && passcode != newcode)
+            {
+                ViewBag.Error = "Nhap sai, vui long nhap lai voi code moi!";
+            }
+            return View();
+        }
+
+        public string RandomCode()
+        {
+            Random _rdm = new Random();
+            int _min = 1000;
+            int _max = 9999;
+            return _rdm.Next(_min, _max).ToString();
+        }
+
+        public IActionResult ResetPass(string? resetpass, string? confirmpass)
+        {
+            ViewBag.isTrue = false;
+            // su ly truy van csdl tai day
+            if (resetpass != confirmpass)
+            {
+                ViewBag.error = "Your input password not same!";
+            } else if(resetpass != null)
+            {
+                ViewBag.isTrue = true;
+            }
             return View();
         }
 
