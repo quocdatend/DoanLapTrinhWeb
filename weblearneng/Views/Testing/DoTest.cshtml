@@ -1,4 +1,4 @@
-﻿﻿    @*
+﻿    @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -6,51 +6,70 @@
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 @model List<Question>
-
+@{
+    // Kiểm tra session có giá trị không
+    var idexam = Context.Session.GetString("idexam");
+    var danhsachQC = ViewBag.QuestionContent as List<QuestionsContent>;
+}
 
 <section class="services" id="services">
     <div class="container1">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading">
-                    <h4>Test <em>1</em></h4>
+                    <h4>Test <em>@ViewData["sessionid"]</em></h4>
                 </div>
                 <div class="container">
                     <h1>Bài thi trắc nghiệm</h1>
-                    <form asp-action="SubmitAnswers" asp-controller="Testing" method="post">
-                        @foreach (var item in Model)
+                    <form asp-action="SubmitAnswers" asp-controller="Testing" method="post" onsubmit="return validateForm()">
+                        @foreach(var item1 in danhsachQC)
                         {
                             <div class="card">
                                 <div class="card-header">
-                                    @item.QuestionText
+                                    Bai:@item1.Contentid
                                 </div>
-                                <div class="card-body">
-                                    <p>Nội dung câu hỏi 1?</p>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="a" id="">
-                                        <label class="form-check-label" for="question1a">
-                                            @item.AnswerA
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="b" id="">
-                                        <label class="form-check-label" for="question1b">
-                                            @item.AnswerB
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="c" id="">
-                                        <label class="form-check-label" for="question1c">
-                                            @item.AnswerC
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="d" id="">
-                                        <label class="form-check-label" for="question1c">
-                                            @item.AnswerD
-                                        </label>
-                                    </div>
+                                <div class="card-header">
+                                    @item1.TextContent
                                 </div>
+                                @if(item1.TextQuestionsbigIfhave!=null){
+                                    <div class="card-header">
+                                        @item1.TextQuestionsbigIfhave
+                                    </div>
+                                }
+                            @foreach (var item in Model)
+                            {      
+                                @if(item.Qcid.Equals(item1.Contentid)){
+                                    <div class="card-header">
+                                        @item.QuestionText
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="A" id="@($"question_{item.QuestionId}_a")">
+                                            <label class="form-check-label" for="@($"question_{item.QuestionId}_a")">
+                                                @item.AnswerA
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="B" id="@($"question_{item.QuestionId}_b")">
+                                            <label class="form-check-label" for="@($"question_{item.QuestionId}_b")">
+                                                @item.AnswerB
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="C" id="@($"question_{item.QuestionId}_c")">
+                                            <label class="form-check-label" for="@($"question_{item.QuestionId}_c")">
+                                                @item.AnswerC
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="SelectedAnswers[@item.QuestionId]" value="D" id="@($"question_{item.QuestionId}_d")">
+                                            <label class="form-check-label" for="@($"question_{item.QuestionId}_d")">
+                                                @item.AnswerD
+                                            </label>
+                                        </div>
+                                    </div>
+                            }
+                            }
                             </div>
                         }
                         <button type="submit" class="btn btn-primary " style="background: linear-gradient(-145deg, rgba(219, 138, 222, 1) 0%, rgba(246, 191, 159, 1) 100%) !important ;    border-color: #dc3545;;">Nộp bài</button>
@@ -60,3 +79,23 @@
         </div>
     </div>
 </section>
+
+
+<script>
+    function validateForm() {
+        var radios = document.querySelectorAll('input[type="radio"]');
+        var checked = false;
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                checked = true;
+                break;
+            }
+        }
+        if (!checked) {
+            alert('Vui lòng chọn ít nhất một câu trả lời trước khi nộp bài.');
+            return false;
+        }
+        return true;
+    }
+
+</script>
