@@ -7,14 +7,22 @@ namespace demotienganh.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IEmailSender emailSender;
+        public HomeController(IEmailSender emailSender)
         {
-            _logger = logger;
+            this.emailSender = emailSender;
         }
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string? name, string? email, string? message)
         {
+            if (email != null && name != null && message != null)
+            {
+                await emailSender.SendEmailAsync("hnqdat2003@gmail.com", "Client Interaction", "Content: \n" + message + "\n" + "Name: " + name + "\nEmail: " + email);
+            }
             return View();
         }
 
