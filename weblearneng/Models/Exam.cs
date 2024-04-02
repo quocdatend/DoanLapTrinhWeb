@@ -9,9 +9,7 @@ public partial class Exam
 
     public string? Examname { get; set; }
 
+    public virtual ICollection<ExamHistory> ExamHistories { get; set; } = new List<ExamHistory>();
+
     public virtual ICollection<QuestionsContent> QuestionsContents { get; set; } = new List<QuestionsContent>();
-
-    public virtual ICollection<Score> Scores { get; set; } = new List<Score>();
-
-    public virtual ICollection<UserResponse> UserResponses { get; set; } = new List<UserResponse>();
 }

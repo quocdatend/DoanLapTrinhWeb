@@ -19,13 +19,13 @@ public partial class DatawebengContext : DbContext
 
     public virtual DbSet<Exam> Exams { get; set; }
 
+    public virtual DbSet<ExamHistory> ExamHistories { get; set; }
+
     public virtual DbSet<Grammar> Grammars { get; set; }
 
     public virtual DbSet<Question> Questions { get; set; }
 
     public virtual DbSet<QuestionsContent> QuestionsContents { get; set; }
-
-    public virtual DbSet<Score> Scores { get; set; }
 
     public virtual DbSet<Testgrammar> Testgrammars { get; set; }
 
@@ -43,7 +43,7 @@ public partial class DatawebengContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ACCOUNT__3214EC274F919F6B");
+            entity.HasKey(e => e.Id).HasName("PK__ACCOUNT__3214EC27F95A753F");
 
             entity.ToTable("ACCOUNT");
 
@@ -66,7 +66,7 @@ public partial class DatawebengContext : DbContext
 
         modelBuilder.Entity<Exam>(entity =>
         {
-            entity.HasKey(e => e.Examid).HasName("PK__EXAMS__8D5AA6D0BFB42206");
+            entity.HasKey(e => e.Examid).HasName("PK__EXAMS__8D5AA6D03AB45CC0");
 
             entity.ToTable("EXAMS");
 
@@ -79,9 +79,32 @@ public partial class DatawebengContext : DbContext
                 .HasColumnName("EXAMNAME");
         });
 
+        modelBuilder.Entity<ExamHistory>(entity =>
+        {
+            entity.HasKey(e => e.ScoreId).HasName("PK__Scores__7DD229F1D93F3897");
+
+            entity.ToTable("ExamHistory");
+
+            entity.Property(e => e.ScoreId).HasColumnName("ScoreID");
+            entity.Property(e => e.EndTime).HasColumnType("datetime");
+            entity.Property(e => e.ExamId).HasColumnName("ExamID");
+            entity.Property(e => e.StartTime).HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Exam).WithMany(p => p.ExamHistories)
+                .HasForeignKey(d => d.ExamId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Scores__ExamID__4CA06362");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ExamHistories)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Scores__UserID__4D94879B");
+        });
+
         modelBuilder.Entity<Grammar>(entity =>
         {
-            entity.HasKey(e => e.Name).HasName("PK__GRAMMAR__D9C1FA01EAA705D7");
+            entity.HasKey(e => e.Name).HasName("PK__GRAMMAR__D9C1FA016FE38402");
 
             entity.ToTable("GRAMMAR");
 
@@ -108,9 +131,7 @@ public partial class DatawebengContext : DbContext
 
             entity.ToTable("QUESTIONS");
 
-            entity.Property(e => e.QuestionId)
-                .ValueGeneratedNever()
-                .HasColumnName("QuestionID");
+            entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.AnswerA).HasColumnType("text");
             entity.Property(e => e.AnswerB).HasColumnType("text");
             entity.Property(e => e.AnswerC).HasColumnType("text");
@@ -142,14 +163,13 @@ public partial class DatawebengContext : DbContext
                 .HasMaxLength(200)
                 .HasColumnName("PICTURE");
             entity.Property(e => e.QuestionsStyle)
-                .HasMaxLength(10)
-                .IsFixedLength()
+                .HasColumnType("ntext")
                 .HasColumnName("QUESTIONS-STYLE");
             entity.Property(e => e.TextContent)
                 .HasMaxLength(200)
                 .HasColumnName("TEXT-CONTENT");
             entity.Property(e => e.TextQuestionsbigIfhave)
-                .HasMaxLength(200)
+                .HasColumnType("ntext")
                 .HasColumnName("Text-questionsbig-ifhave");
 
             entity.HasOne(d => d.Exam).WithMany(p => p.QuestionsContents)
@@ -157,28 +177,9 @@ public partial class DatawebengContext : DbContext
                 .HasConstraintName("FK_QUESTIONS-CONTENT_EXAMS");
         });
 
-        modelBuilder.Entity<Score>(entity =>
-        {
-            entity.HasKey(e => e.ScoreId).HasName("PK__Scores__7DD229F1216AFB9F");
-
-            entity.Property(e => e.ScoreId)
-                .ValueGeneratedNever()
-                .HasColumnName("ScoreID");
-            entity.Property(e => e.ExamId).HasColumnName("ExamID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-
-            entity.HasOne(d => d.Exam).WithMany(p => p.Scores)
-                .HasForeignKey(d => d.ExamId)
-                .HasConstraintName("FK__Scores__ExamID__5DCAEF64");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Scores)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Scores__UserID__5EBF139D");
-        });
-
         modelBuilder.Entity<Testgrammar>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Name }).HasName("PK__TESTGRAM__3F88F38728BD238A");
+            entity.HasKey(e => new { e.Id, e.Name }).HasName("PK__TESTGRAM__3F88F387D07A7CCD");
 
             entity.ToTable("TESTGRAMMAR");
 
@@ -205,7 +206,7 @@ public partial class DatawebengContext : DbContext
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.Testgrammars)
                 .HasForeignKey(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTGRAMMAR__ID__60A75C0F");
+                .HasConstraintName("FK__TESTGRAMMAR__ID__4222D4EF");
 
             entity.HasOne(d => d.NameNavigation).WithMany(p => p.Testgrammars)
                 .HasForeignKey(d => d.Name)
@@ -215,7 +216,7 @@ public partial class DatawebengContext : DbContext
 
         modelBuilder.Entity<Testvocabulary>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Nameen }).HasName("PK__TESTVOCA__9952ED4AEC33733F");
+            entity.HasKey(e => new { e.Id, e.Nameen }).HasName("PK__TESTVOCA__9952ED4A4A67C7C5");
 
             entity.ToTable("TESTVOCABULARY");
 
@@ -240,7 +241,7 @@ public partial class DatawebengContext : DbContext
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.Testvocabularies)
                 .HasForeignKey(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTVOCABULA__ID__628FA481");
+                .HasConstraintName("FK__TESTVOCABULA__ID__3C69FB99");
 
             entity.HasOne(d => d.NameenNavigation).WithMany(p => p.Testvocabularies)
                 .HasForeignKey(d => d.Nameen)
@@ -250,11 +251,9 @@ public partial class DatawebengContext : DbContext
 
         modelBuilder.Entity<UserResponse>(entity =>
         {
-            entity.HasKey(e => e.ResponseId).HasName("PK__UserResp__1AAA640CC9274199");
+            entity.HasKey(e => e.ResponseId).HasName("PK__UserResp__1AAA640C0853FB66");
 
-            entity.Property(e => e.ResponseId)
-                .ValueGeneratedNever()
-                .HasColumnName("ResponseID");
+            entity.Property(e => e.ResponseId).HasColumnName("ResponseID");
             entity.Property(e => e.ExamId).HasColumnName("ExamID");
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.UserAnswer)
@@ -263,22 +262,18 @@ public partial class DatawebengContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            entity.HasOne(d => d.Exam).WithMany(p => p.UserResponses)
-                .HasForeignKey(d => d.ExamId)
-                .HasConstraintName("FK__UserRespo__ExamI__6383C8BA");
-
             entity.HasOne(d => d.Question).WithMany(p => p.UserResponses)
                 .HasForeignKey(d => d.QuestionId)
                 .HasConstraintName("FK__UserRespo__Quest__4F7CD00D");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserResponses)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__UserRespo__UserI__656C112C");
+                .HasConstraintName("FK__UserRespo__UserI__5070F446");
         });
 
         modelBuilder.Entity<Vocabulary>(entity =>
         {
-            entity.HasKey(e => e.Nameen).HasName("PK__VOCABULA__B46016DB3D9E5339");
+            entity.HasKey(e => e.Nameen).HasName("PK__VOCABULA__B46016DB269BE1EC");
 
             entity.ToTable("VOCABULARY");
 
