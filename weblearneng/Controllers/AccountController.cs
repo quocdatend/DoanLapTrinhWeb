@@ -11,16 +11,19 @@ namespace demotienganh.Controllers
 {
     public class AccountController : Controller
     {
-
+        private readonly IEmailSender emailSender;
         private readonly ILogger<AccountController> _logger;
-
+        public AccountController(IEmailSender emailSender)
+        {
+            this.emailSender = emailSender;
+        }
         //       SqlConnection con = new SqlConnection("Data Source=QUOCDAT\\SQLEXPRESS;Initial Catalog=DATAWEBENG;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
         DatawebengContext db = new DatawebengContext();
-        public AccountController(ILogger<AccountController> logger)
-        {
-            _logger = logger;
-        }
+      //  public AccountController(ILogger<AccountController> logger)
+    //    {
+  //          _logger = logger;
+//        }
 
         public IActionResult Index()
         {
@@ -59,7 +62,7 @@ namespace demotienganh.Controllers
             return View();
         }
 
-        public IActionResult ForgetPass(string email)
+        public async Task<IActionResult> ForgetPass(string email)
         {
             ViewBag.isTrue = false;
             var lstAccount = db.Accounts.ToList();
@@ -73,6 +76,7 @@ namespace demotienganh.Controllers
             if (ViewBag.Email == email && email != null)
             {
                 ViewBag.isTrue = true;
+                HttpContext.Session.SetString("email", email);
                 ForgetPass();
                 return View();
             }
@@ -81,15 +85,23 @@ namespace demotienganh.Controllers
         }
 
         [HttpPost]
-        public IActionResult ForgetPass()
+        public async Task<IActionResult> ForgetPass()
         {
             TempData["code"] = RandomCode(); // not use this
             string newcode = RandomCode();
             HttpContext.Session.SetString("code", newcode);
-            // Gui email tai day
-            return RedirectToAction("EnterCode"); // and this 
+            string email = HttpContext.Session.GetString("email");
+            await emailSender.SendEmailAsync(email, "Code Reset Password", "Kính gửi," +
+                "\r\n\r\nChúng tôi đã nhận được yêu cầu đặt lại mật khẩu từ tài khoản của bạn. Dưới đây là mã code bạn cần để tiếp tục quá trình đặt lại mật khẩu" +
+                "\r\n\r\nMã Code: " + newcode + "" +
+                "\r\n\r\nVui lòng sao chép mã code này và sử dụng nó trên trang đặt lại mật khẩu để hoàn tất quá trình." +
+                "\r\n\r\nNếu bạn không yêu cầu đặt lại mật khẩu này, vui lòng bỏ qua email này. Tài khoản của bạn sẽ vẫn an toàn." +
+                "\r\n\r\nĐảm bảo rằng bạn đặt mật khẩu mạnh sau khi đặt lại, bao gồm ít nhất 8 ký tự, bao gồm cả chữ hoa, chữ thường, số và ký tự đặc biệt." +
+                "\r\n\r\nNếu bạn cần sự trợ giúp hoặc có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với chúng tôi qua email này." +
+                "\r\n\r\nTrân trọng,");
+            return RedirectToAction("EnterCode"); // and this
         }
-
+        
         public IActionResult EnterCode(string? passcode, string code)
         {
             string newcode = HttpContext.Session.GetString("code");
