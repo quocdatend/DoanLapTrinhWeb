@@ -14,8 +14,6 @@ namespace demotienganh.Controllers
     {
         private readonly ILogger<TestingController> _logger;
         DatawebengContext dbcontext = new DatawebengContext();
-        private DateTime timebegin = new DateTime();
-        private DateTime timeend = new DateTime();
         public TestingController(ILogger<TestingController> logger)
         {
             _logger = logger;
@@ -97,8 +95,11 @@ namespace demotienganh.Controllers
             List<QuestionsContent> question_content = getQC(id);
             var question = getQbyQCid(question_content);
             ViewBag.QuestionContent = question_content;
-            timebegin = DateTime.Now;
+            DateTime timebegin = DateTime.Now;
+
+            string timeBeginString = timebegin.ToString("yyyy-MM-dd HH:mm:ss");
             _logger.LogInformation($"{timebegin}");
+            HttpContext.Session.SetString("timebegin", timeBeginString);
             return View(question);
 
         }
@@ -135,7 +136,10 @@ namespace demotienganh.Controllers
                         TrueAnswer = TAnswer,
                         Ketqua = Ketquacmp
                     };
-                    timeend = DateTime.Now;
+                    DateTime timeend = DateTime.Now;
+                    string timeEndString = timeend.ToString("yyyy-MM-dd HH:mm:ss");
+                    _logger.LogInformation($"{timeEndString}");
+                    HttpContext.Session.SetString("timeend", timeEndString);
                     resultList.Add(result);
                     // Ghi log
                     // _logger.LogInformation($"Question ID: {idquestion1}, Selected Answer: {TAnswer}, True Answer: {selectedAnswer} , ketqua :{Ketquacmp}");
@@ -269,26 +273,10 @@ namespace demotienganh.Controllers
                     }
                     ListUserResponse.Add(new UserResponse { UserId = idaccount, ExamId = idexam, QuestionId = item.QuestionId, UserAnswer = item.Answer, IsCorrect = cmpketqua });
                 }
-
-                if (timebegin < SqlDateTime.MinValue.Value)
-                {
-                    timebegin = SqlDateTime.MinValue.Value; // Đặt thành giá trị tối thiểu hợp lệ
-                }
-                else if (timebegin > SqlDateTime.MaxValue.Value)
-                {
-                    timebegin = SqlDateTime.MaxValue.Value; // Đặt thành giá trị tối đa hợp lệ
-                }
-
-                // Kiểm tra nếu timeend nằm ngoài phạm vi hợp lệ
-                if (timeend < SqlDateTime.MinValue.Value)
-                {
-                    timeend = SqlDateTime.MinValue.Value; // Đặt thành giá trị tối thiểu hợp lệ
-                }
-                else if (timeend > SqlDateTime.MaxValue.Value)
-                {
-                    timeend = SqlDateTime.MaxValue.Value; // Đặt thành giá trị tối đa hợp lệ
-                }
-
+                string begin = HttpContext.Session.GetString("timebegin");
+                string end = HttpContext.Session.GetString("timeend");
+                DateTime timebegin = DateTime.Parse(begin);
+                DateTime timeend = DateTime.Parse(end);
                 ExamHistory history = new ExamHistory
                 {
                     UserId = idaccount,
