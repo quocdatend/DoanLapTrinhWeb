@@ -39,6 +39,7 @@ namespace demotienganh.Controllers
             if (usercheck != null)
             {
                 String userid = usercheck.Id.ToString();
+                HttpContext.Session.SetInt32("idAccount", usercheck.Id);
                 // Lưu tên đăng nhập trong session
                 HttpContext.Session.SetString("username", userid);
                 return RedirectToAction("Index", "Home");
