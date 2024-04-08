@@ -7,6 +7,9 @@ using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Runtime.Intrinsics.Arm;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace demotienganh.Controllers
 {
@@ -28,16 +31,22 @@ namespace demotienganh.Controllers
 
         [HttpPost]
         public IActionResult Index(string username, string password)
-        {
+        { 
+            string newhash = CalculateMD5(password);
             // Kiểm tra tên đăng nhập và mật khẩu
-            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(password)).FirstOrDefault();
-
+            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(newhash.Substring(0,12))).FirstOrDefault();
             if (usercheck != null)
             {
+                
                 String userid = usercheck.Id.ToString();
                 HttpContext.Session.SetInt32("idAccount", usercheck.Id);
                 // Lưu tên đăng nhập trong session
                 HttpContext.Session.SetString("username", userid);
+                if(usercheck.Role)
+                {
+                    HttpContext.Session.SetString("Role", usercheck.Role.ToString());
+					return RedirectToAction("Index", "Admin");
+				}
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -45,6 +54,21 @@ namespace demotienganh.Controllers
                 ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng.";
                 return View();
             }
+        }
+
+        public string CalculateMD5(string input)
+        {
+            byte[] tmpSource = ASCIIEncoding.ASCII.GetBytes(input);
+
+            //Compute hash based on source data
+            byte[] tmpHash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+            int i;
+            StringBuilder sOutput = new StringBuilder(tmpHash.Length);
+            for (i = 0; i < tmpHash.Length - 1; i++)
+            {
+                sOutput.Append(tmpHash[i].ToString("X2"));
+            }
+            return sOutput.ToString();
         }
 
         public IActionResult Logout()
@@ -58,7 +82,7 @@ namespace demotienganh.Controllers
         {
             ViewBag.Error = null;
             ViewBag.Success = null;
-            ViewBag.isTrue = true;
+            ViewBag.isTrue = true;        
             if(email != null && name != null && pass != null && re_pass != null)
             {
                 if(pass != re_pass)
@@ -70,12 +94,13 @@ namespace demotienganh.Controllers
                     ViewBag.Error = "Error: Password not same!";
                 } else
                 {
+                    string repasshash = CalculateMD5(re_pass);
                     var newaccount = new Account()
                     {
                         Name = name,
                         Email = email,
                         Role = false,
-                        Pass = pass,
+                        Pass = repasshash,
                     };
                     db.Accounts.Add(newaccount);
                     db.SaveChanges();
@@ -160,16 +185,18 @@ namespace demotienganh.Controllers
         {
             string email = HttpContext.Session.GetString("email");
             ViewBag.isTrue = false;
-            var account = db.Accounts.SingleOrDefault(x => x.Email == email);
+            var account = db.Accounts.SingleOrDefault(x => x.Email == email);          
+            //bool isMatch = string.Equals(newHash, hashToCompare, StringComparison.OrdinalIgnoreCase);
             if (resetpass != confirmpass)
             {
                 ViewBag.error = "Your input password not same!";
             } else if (resetpass != null)
             {
+                var repasshash = CalculateMD5(resetpass);
                 var parameter = new[]
                 {
                     new SqlParameter("@account_id", account.Id),
-                    new SqlParameter("@account_pass", resetpass)
+                    new SqlParameter("@account_pass", repasshash)
                 };
                 db.Database.ExecuteSqlRaw("UpdateAccountInFGPass @account_id, @account_pass", parameter);
                 ViewBag.isTrue = true;
