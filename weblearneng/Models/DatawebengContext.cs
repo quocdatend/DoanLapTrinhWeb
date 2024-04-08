@@ -57,7 +57,7 @@ public partial class DatawebengContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("NAME");
             entity.Property(e => e.Pass)
-                .HasMaxLength(12)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("PASS");
