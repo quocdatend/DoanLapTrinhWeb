@@ -17,7 +17,5 @@ public partial class Account
 
     public virtual ICollection<ExamHistory> ExamHistories { get; set; } = new List<ExamHistory>();
 
-    public virtual ICollection<Testvocabulary> Testvocabularies { get; set; } = new List<Testvocabulary>();
-
     public virtual ICollection<UserResponse> UserResponses { get; set; } = new List<UserResponse>();
 }

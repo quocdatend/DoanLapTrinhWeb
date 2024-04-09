@@ -29,8 +29,6 @@ public partial class DatawebengContext : DbContext
 
     public virtual DbSet<Testgrammar> Testgrammars { get; set; }
 
-    public virtual DbSet<Testvocabulary> Testvocabularies { get; set; }
-
     public virtual DbSet<UserResponse> UserResponses { get; set; }
 
     public virtual DbSet<Vocabulary> Vocabularies { get; set; }
@@ -194,41 +192,6 @@ public partial class DatawebengContext : DbContext
                 .HasForeignKey(d => d.Name)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__TESTGRAMMA__NAME__5FB337D6");
-        });
-
-        modelBuilder.Entity<Testvocabulary>(entity =>
-        {
-            entity.HasKey(e => new { e.Id, e.Nameen }).HasName("PK__TESTVOCA__9952ED4A4A67C7C5");
-
-            entity.ToTable("TESTVOCABULARY");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Nameen)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("NAMEEN");
-            entity.Property(e => e.Correct)
-                .HasMaxLength(25)
-                .HasColumnName("CORRECT");
-            entity.Property(e => e.Fail1)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL1");
-            entity.Property(e => e.Fail2)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL2");
-            entity.Property(e => e.Fail3)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL3");
-
-            entity.HasOne(d => d.IdNavigation).WithMany(p => p.Testvocabularies)
-                .HasForeignKey(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTVOCABULA__ID__3C69FB99");
-
-            entity.HasOne(d => d.NameenNavigation).WithMany(p => p.Testvocabularies)
-                .HasForeignKey(d => d.Nameen)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTVOCAB__NAMEE__619B8048");
         });
 
         modelBuilder.Entity<UserResponse>(entity =>

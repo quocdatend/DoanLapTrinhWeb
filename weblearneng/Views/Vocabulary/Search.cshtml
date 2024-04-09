@@ -1,43 +1,68 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PagedList<Vocabulary>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Vocabulary Page";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
+<head>
+	<style>
+		.ListPage ul {
+			justify-content: center;
+		}
 
-@model List<Vocabulary>
-<section class="main-banner" id="top">
-    <div class="container">
-<form class="btn-search" style="margin:auto;max-width:600px; padding-bottom: 80px;">
-    <input type="text" placeholder="Search.." name="search" id="search" value="@ViewBag.Search">
-    <button type="submit" id="btnSubmit"><i class="fa fa-search"></i></button>
-</form>
-<table id="list-vocabulary" class="table">
-    <thead>
-        <tr>
-            <th>Tên tiếng anh</th>
-            <th>Tên tiếng việt</th>
-            <th>Loại</th>
-            <th>Chú thích</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Nameen</td>
-                <td>@item.Namevn</td>
-                <td>@item.Type</td>
-                <td>@item.Title</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<button class="btn-primary" style="width: 80px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none">
-    @Html.ActionLink("Back", "Index", "Vocabulary")
-</button>
+			.ListPage ul li{
+				background-color: #e9a5be ;
+				margin: 0px 5px;
+				padding: 0px 6px;
+				border-radius: 10px;
+				border: 1px solid #e9a5be;
+			}
 
-    </div>
-</section>
+				.ListPage ul li a{
+					color: white;
+				}
+	</style>
+</head>
+<body>
+	<section class="main-banner" id="top">
+		<div class="container">
+			<form class="btn-search" style="margin:auto;max-width:600px; padding-bottom: 80px;">
+				<input type="text" placeholder="Search.." name="search" id="search" value="@ViewBag.Search">
+				<button type="submit" id="btnSubmit"><i class="fa fa-search"></i></button>
+			</form>
+			<table id="list-vocabulary" class="table">
+				<thead>
+					<tr>
+						<th>Tên tiếng anh</th>
+						<th>Tên tiếng việt</th>
+						<th>Loại</th>
+						<th>Chú thích</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>@item.Nameen</td>
+							<td>@item.Namevn</td>
+							<td>@item.Type</td>
+							<td>@item.Title</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<h6>@ViewBag.Null</h6>
+			<div class="ListPage">
+				@Html.PagedListPager(Model, page => Url.Action("Search", new { search = @ViewBag.Search, page = page }))
+			</div>
+			<a asp-action="Index" asp-controller="Vocabulary">
+				<button class="btn-primary" style="width: 80px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none">
+					Back
+				</button>
+			</a>
+		</div>
+	</section>
+</body>
+
 
