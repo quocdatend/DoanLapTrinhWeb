@@ -14,6 +14,4 @@ public partial class Vocabulary
     public string Type { get; set; } = null!;
 
     public string? Title { get; set; }
-
-    public virtual ICollection<Testvocabulary> Testvocabularies { get; set; } = new List<Testvocabulary>();
 }

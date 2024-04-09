@@ -1,6 +1,8 @@
 ﻿using weblearneng.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using X.PagedList;
+using Microsoft.IdentityModel.Tokens;
 
 namespace demotienganh.Controllers
 {
@@ -14,27 +16,21 @@ namespace demotienganh.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
-        public IActionResult Search(string search)
+        public IActionResult Search(string search, int? page)
         {
-            var lstVocabualry = db.Vocabularies.ToList();
-            var lstnewVocabualry = new List<Vocabulary>();
-            foreach(var item in  lstVocabualry)
-            {
-                if(search != null)
-                {
-                if(item.Nameen.Contains(search))
-                    {
-                        lstnewVocabualry.Add(item);
-                    }
-                }
-                
-            }
-            return View(lstnewVocabualry);
+            int pageSize = 2;
+            int pageNumber = page == null || pageSize <1 ? 1 : page.Value;
+            var lstnewVocabualry = db.Vocabularies.Where(x => x.Nameen.Contains(search)).ToList();
+            PagedList<Vocabulary> lst = new PagedList<Vocabulary>(lstnewVocabualry, pageNumber, pageSize);
+            ViewBag.Search = search;
+            if (search.IsNullOrEmpty()) ViewBag.Null = "Bạn chưa nhập già trị nào!";
+            else if (lstnewVocabualry.Count == 0 ) ViewBag.Null = "Giá trị nhập không tồn tại!";
+			return View(lst);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
