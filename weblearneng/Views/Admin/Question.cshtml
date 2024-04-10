@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Testing Page";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model List<Question>
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="h3 mb-2 text-gray-800">Testing - Admin</h1>
+            </div>
+
+        </div>
+    </div>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>QuestionText</th>
+                            <th>Answer</th>
+                            <th>CorrectAnswer</th>
+                            <th>action</th>
+
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>QuestionText</th>
+                            <th>Answer</th>
+                            <th>CorrectAnswer</th>
+                            <th>action</th>
+                        </tr>
+                    </tfoot>
+
+                    @foreach (var item in Model)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@item.QuestionId</td>
+                                <td>@item.QuestionText</td>
+                                <td style="display: block;">
+
+                                    <input type="text" name="input-socau" style="display: block; margin-bottom: 5px;" value="A.@item.AnswerA">
+
+                                    <input type="text" name="input-socau" style="display: block; margin-bottom: 5px;" value="B.@item.AnswerB">
+
+                                    <input type="text" name="input-socau" style="display: block;  margin-bottom: 5px;" value="C.@item.AnswerC">
+
+                                    <input type="text" name="input-socau" style="display: block;  margin-bottom: 5px;" value="D.@item.AnswerD">
+                                </td>
+                                <td>
+                                    <select name="answers">
+                                        <option value="answer1">Đáp án @item.CorrectAnswer</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <form asp-action="EditQuestion" asp-route-id="@item.QuestionId" method="post">
+                                        <button type="submit"><i class="fas fa-edit"></i></button>
+                                    </form>                                   
+                                    <form asp-action="DeleteQuestion" asp-route-id="@item.QuestionId" asp-route-idQ="@ViewBag.Idquestioncontent" method="post">
+                                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                        <span asp-validation-for="@item.QuestionId" class="text-danger"></span>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="col">
+                    <div class="scroll-to-section"><a asp-controller="admin" asp-action="AddQuestion" asp-route-id="@ViewBag.Idquestioncontent" class="btn btn-primary">ADD new Question</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Optional confirmation dialog (consider user experience)
+    $(document).ready(function () {
+        $('.btn-danger').click(function (e) {
+            var confirmed = confirm("Are you sure you want to delete this exam?");
+            if (!confirmed) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+}

@@ -118,7 +118,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" asp-action="Exam" asp-controller="Admin">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tests</span>
                 </a>
@@ -327,5 +327,6 @@
     <!-- Page level custom scripts -->
     <script src="~/layoutadmin/js/demo/chart-area-demo.js"></script>
     <script src="~/layoutadmin/js/demo/chart-pie-demo.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
