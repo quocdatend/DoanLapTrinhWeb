@@ -5,21 +5,15 @@ namespace weblearneng.Models;
 
 public partial class Testgrammar
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
 
-    public string Question { get; set; } = null!;
+    public string? ExOr { get; set; }
 
-    public string Correct { get; set; } = null!;
+    public string? Ex1 { get; set; }
 
-    public string Fail1 { get; set; } = null!;
+    public string? Ex2 { get; set; }
 
-    public string Fail2 { get; set; } = null!;
-
-    public string Fail3 { get; set; } = null!;
-
-    public virtual Account IdNavigation { get; set; } = null!;
+    public string? Ex3 { get; set; }
 
     public virtual Grammar NameNavigation { get; set; } = null!;
 }

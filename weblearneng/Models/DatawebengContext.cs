@@ -29,8 +29,6 @@ public partial class DatawebengContext : DbContext
 
     public virtual DbSet<Testgrammar> Testgrammars { get; set; }
 
-    public virtual DbSet<Testvocabulary> Testvocabularies { get; set; }
-
     public virtual DbSet<UserResponse> UserResponses { get; set; }
 
     public virtual DbSet<Vocabulary> Vocabularies { get; set; }
@@ -57,7 +55,7 @@ public partial class DatawebengContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("NAME");
             entity.Property(e => e.Pass)
-                .HasMaxLength(12)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("PASS");
@@ -70,9 +68,7 @@ public partial class DatawebengContext : DbContext
 
             entity.ToTable("EXAMS");
 
-            entity.Property(e => e.Examid)
-                .ValueGeneratedNever()
-                .HasColumnName("EXAMID");
+            entity.Property(e => e.Examid).HasColumnName("EXAMID");
             entity.Property(e => e.Examname)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -120,6 +116,7 @@ public partial class DatawebengContext : DbContext
             entity.Property(e => e.Negative)
                 .HasMaxLength(50)
                 .HasColumnName("NEGATIVE");
+            entity.Property(e => e.Order).HasMaxLength(50);
             entity.Property(e => e.Title)
                 .HasMaxLength(300)
                 .HasColumnName("TITLE");
@@ -155,18 +152,14 @@ public partial class DatawebengContext : DbContext
             entity.ToTable("QUESTIONS-CONTENT");
 
             entity.Property(e => e.Contentid).HasColumnName("CONTENTID");
-            entity.Property(e => e.Adudi)
-                .HasMaxLength(200)
-                .HasColumnName("ADUDI");
+            entity.Property(e => e.Adudi).HasColumnName("ADUDI");
             entity.Property(e => e.Examid).HasColumnName("EXAMID");
-            entity.Property(e => e.Picture)
-                .HasMaxLength(200)
-                .HasColumnName("PICTURE");
+            entity.Property(e => e.Picture).HasColumnName("PICTURE");
             entity.Property(e => e.QuestionsStyle)
                 .HasColumnType("ntext")
                 .HasColumnName("QUESTIONS-STYLE");
             entity.Property(e => e.TextContent)
-                .HasMaxLength(200)
+                .HasMaxLength(500)
                 .HasColumnName("TEXT-CONTENT");
             entity.Property(e => e.TextQuestionsbigIfhave)
                 .HasColumnType("ntext")
@@ -179,74 +172,22 @@ public partial class DatawebengContext : DbContext
 
         modelBuilder.Entity<Testgrammar>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.Name }).HasName("PK__TESTGRAM__3F88F387D07A7CCD");
+            entity
+                .HasNoKey()
+                .ToTable("TESTGRAMMAR");
 
-            entity.ToTable("TESTGRAMMAR");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Ex1).HasMaxLength(150);
+            entity.Property(e => e.Ex2).HasMaxLength(150);
+            entity.Property(e => e.Ex3).HasMaxLength(150);
+            entity.Property(e => e.ExOr).HasMaxLength(150);
             entity.Property(e => e.Name)
                 .HasMaxLength(40)
                 .HasColumnName("NAME");
-            entity.Property(e => e.Correct)
-                .HasMaxLength(25)
-                .HasColumnName("CORRECT");
-            entity.Property(e => e.Fail1)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL1");
-            entity.Property(e => e.Fail2)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL2");
-            entity.Property(e => e.Fail3)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL3");
-            entity.Property(e => e.Question)
-                .HasMaxLength(100)
-                .HasColumnName("QUESTION");
 
-            entity.HasOne(d => d.IdNavigation).WithMany(p => p.Testgrammars)
-                .HasForeignKey(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTGRAMMAR__ID__4222D4EF");
-
-            entity.HasOne(d => d.NameNavigation).WithMany(p => p.Testgrammars)
+            entity.HasOne(d => d.NameNavigation).WithMany()
                 .HasForeignKey(d => d.Name)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__TESTGRAMMA__NAME__5FB337D6");
-        });
-
-        modelBuilder.Entity<Testvocabulary>(entity =>
-        {
-            entity.HasKey(e => new { e.Id, e.Nameen }).HasName("PK__TESTVOCA__9952ED4A4A67C7C5");
-
-            entity.ToTable("TESTVOCABULARY");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Nameen)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("NAMEEN");
-            entity.Property(e => e.Correct)
-                .HasMaxLength(25)
-                .HasColumnName("CORRECT");
-            entity.Property(e => e.Fail1)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL1");
-            entity.Property(e => e.Fail2)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL2");
-            entity.Property(e => e.Fail3)
-                .HasMaxLength(25)
-                .HasColumnName("FAIL3");
-
-            entity.HasOne(d => d.IdNavigation).WithMany(p => p.Testvocabularies)
-                .HasForeignKey(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTVOCABULA__ID__3C69FB99");
-
-            entity.HasOne(d => d.NameenNavigation).WithMany(p => p.Testvocabularies)
-                .HasForeignKey(d => d.Nameen)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__TESTVOCAB__NAMEE__619B8048");
         });
 
         modelBuilder.Entity<UserResponse>(entity =>

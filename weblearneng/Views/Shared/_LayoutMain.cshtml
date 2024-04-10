@@ -42,13 +42,13 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a href="@Url.Action("Index","Home")" class="logo">
-                            <img src="../layoutindex/assets/images/a1.png" alt="EduWell Template">
+                            <img src="~/layoutindex/assets/images/a1.png" alt="EduWell Template">
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Vocabulary", "Index", "Vocabulary")</li>
+                            <li>@Html.ActionLink("Vocabulary", "Search", "Vocabulary")</li>
                             <li>@Html.ActionLink("Grammar", "Index", "Grammar")</li>
                             @if (!string.IsNullOrEmpty(username))
                             {

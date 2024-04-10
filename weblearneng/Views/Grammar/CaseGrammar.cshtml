@@ -4,41 +4,61 @@
 @{
     ViewData["Title"] = "Case Grammar";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    var username = Context.Session.GetString("username");
 }
 
 @model List<Grammar>
-
-<section class="main-banner" id="top">
-    <div class="container">
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Định nghĩa</th>
-            <th>Khẳng định</th>
-            <th>Phủ định</th>
-            <th>Nghi vấn</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Title</td>
-                <td>@item.Confirm</td>
-                <td>@item.Doubt</td>
-                <td>@item.Negative</td>
-            </tr>
-            <button class="btn-primary" style="width: 80px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none;">
-                @Html.ActionLink("Back", "Index", "Grammar")
-            </button>
-            <button class="btn-primary" style="width: 80px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none;">
-                Test
-            </button>
+<head>
+    <style>
+        button a {
+            color: white;
         }
-    </tbody>
-</table>
-
-</div>
-</section>
+    </style>
+</head>
+<body>
+    <section class="main-banner" id="top">
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Định nghĩa</th>
+                        <th>Khẳng định</th>
+                        <th>Phủ định</th>
+                        <th>Nghi vấn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Title</td>
+                            <td>@item.Confirm</td>
+                            <td>@item.Doubt</td>
+                            <td>@item.Negative</td>
+                        </tr>
+                        <button class="btn-primary" style="width: 80px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none;">
+                            @Html.ActionLink("Back", "Index", "Grammar")
+                        </button>
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <a asp-action="ExampleGrammar" asp-controller="Grammar" asp-route-name="@item.Name" style="text-decoration:none; color: white">
+							    <button type="submit"  class="btn-primary" style="width: 100px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none;">
+								    Example
+							    </button>
+                            </a>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn-primary" style="width: 100px;height: 40px;border-radius: 20px 20px; color: white; Background: #db8ade; border: none;">
+								@Html.ActionLink("Example", "Index", "Account")
+                            </button>
+                        }
+                    }
+                </tbody>
+            </table>
+            
+        </div>
+    </section>
+</body>

@@ -1,0 +1,37 @@
+﻿@model weblearneng.Models.Exam
+
+@{
+    ViewData["Title"] = "EditExam";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+<h1>EditExam</h1>
+
+<h4>Exam</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditExam">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Examid" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Examname" class="control-label"></label>
+                <input asp-for="Examname" class="form-control" value="@Model.Examname"/>
+                <span asp-validation-for="Examname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Exam">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

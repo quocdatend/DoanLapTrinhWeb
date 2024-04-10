@@ -1,0 +1,54 @@
+﻿@model weblearneng.Models.Vocabulary
+
+@{
+    ViewData["Title"] = "Delete Vocabualry";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Vocabualry</h1>
+
+<div>
+    <hr />
+    <dl class="row" style="padding: 0px 75px;">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Fchar)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Fchar)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nameen)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nameen)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Namevn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Namevn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+    </dl>
+    <div style="display:flex; justify-content:flex-start; margin-left: 10px">
+		<form asp-action="DeleteVocabulary" asp-controller="Admin" asp-route-nameen="@Model.Nameen" method="post">
+			<button type="submit" class="btn btn-danger" style="margin-right: 8px">Delete</button>
+		</form>
+		<form asp-action="Vocabulary" asp-controller="Admin" method="post">
+			<button type="submit" class="btn btn-secondary">Back</button>
+		</form>
+    </div>
+    
+</div>
+

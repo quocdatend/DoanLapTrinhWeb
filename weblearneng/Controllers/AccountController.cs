@@ -6,6 +6,10 @@ using System.Diagnostics;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Runtime.Intrinsics.Arm;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace demotienganh.Controllers
 {
@@ -17,13 +21,8 @@ namespace demotienganh.Controllers
         {
             this.emailSender = emailSender;
         }
-        //       SqlConnection con = new SqlConnection("Data Source=QUOCDAT\\SQLEXPRESS;Initial Catalog=DATAWEBENG;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
         DatawebengContext db = new DatawebengContext();
-      //  public AccountController(ILogger<AccountController> logger)
-    //    {
-  //          _logger = logger;
-//        }
 
         public IActionResult Index()
         {
@@ -32,15 +31,22 @@ namespace demotienganh.Controllers
 
         [HttpPost]
         public IActionResult Index(string username, string password)
-        {
+        { 
+            string newhash = CalculateMD5(password);
             // Kiểm tra tên đăng nhập và mật khẩu
-            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(password)).FirstOrDefault();
-
+            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(newhash.Substring(0,12))).FirstOrDefault();
             if (usercheck != null)
             {
+                
                 String userid = usercheck.Id.ToString();
+                HttpContext.Session.SetInt32("idAccount", usercheck.Id);
                 // Lưu tên đăng nhập trong session
                 HttpContext.Session.SetString("username", userid);
+                if(usercheck.Role)
+                {
+                    HttpContext.Session.SetString("Role", usercheck.Role.ToString());
+					return RedirectToAction("Index", "Admin");
+				}
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -50,6 +56,21 @@ namespace demotienganh.Controllers
             }
         }
 
+        public string CalculateMD5(string input)
+        {
+            byte[] tmpSource = ASCIIEncoding.ASCII.GetBytes(input);
+
+            //Compute hash based on source data
+            byte[] tmpHash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+            int i;
+            StringBuilder sOutput = new StringBuilder(tmpHash.Length);
+            for (i = 0; i < tmpHash.Length - 1; i++)
+            {
+                sOutput.Append(tmpHash[i].ToString("X2"));
+            }
+            return sOutput.ToString();
+        }
+
         public IActionResult Logout()
         {
             // Xóa tên đăng nhập khỏi session khi đăng xuất
@@ -57,8 +78,40 @@ namespace demotienganh.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Signup()
+        public IActionResult Signup(string? name, string? email, string? pass, string? re_pass)
         {
+            ViewBag.Error = null;
+            ViewBag.Success = null;
+            ViewBag.isTrue = true;        
+            if(email != null && name != null && pass != null && re_pass != null)
+            {
+                if(pass != re_pass)
+                {
+                    ViewBag.Name = name;
+                    ViewBag.Email = email;
+                    ViewBag.Pass = pass;
+                    ViewBag.Re_pass = re_pass;
+                    ViewBag.Error = "Error: Password not same!";
+                } else
+                {
+                    string repasshash = CalculateMD5(re_pass);
+                    var newaccount = new Account()
+                    {
+                        Name = name,
+                        Email = email,
+                        Role = false,
+                        Pass = repasshash,
+                    };
+                    db.Accounts.Add(newaccount);
+                    db.SaveChanges();
+                    ViewBag.Name = name;
+                    ViewBag.Email = email;
+                    ViewBag.Pass = pass;
+                    ViewBag.Re_pass = re_pass;
+                    ViewBag.isTrue = true;
+                    ViewBag.Success = "Save Successful!";
+                }
+            }
             return View();
         }
 
@@ -128,15 +181,24 @@ namespace demotienganh.Controllers
             return _rdm.Next(_min, _max).ToString();
         }
 
-        public IActionResult ResetPass(string? resetpass, string? confirmpass)
+        public ActionResult<IEnumerable<Account>> ResetPass(string? resetpass, string? confirmpass)
         {
+            string email = HttpContext.Session.GetString("email");
             ViewBag.isTrue = false;
-            // su ly truy van csdl tai day
+            var account = db.Accounts.SingleOrDefault(x => x.Email == email);          
+            //bool isMatch = string.Equals(newHash, hashToCompare, StringComparison.OrdinalIgnoreCase);
             if (resetpass != confirmpass)
             {
                 ViewBag.error = "Your input password not same!";
-            } else if(resetpass != null)
+            } else if (resetpass != null)
             {
+                var repasshash = CalculateMD5(resetpass);
+                var parameter = new[]
+                {
+                    new SqlParameter("@account_id", account.Id),
+                    new SqlParameter("@account_pass", repasshash)
+                };
+                db.Database.ExecuteSqlRaw("UpdateAccountInFGPass @account_id, @account_pass", parameter);
                 ViewBag.isTrue = true;
             }
             return View();
