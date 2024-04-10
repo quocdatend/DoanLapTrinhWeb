@@ -1,0 +1,65 @@
+﻿@model weblearneng.Models.Question
+
+@{
+    ViewData["Title"] = "EditQuestion";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>EditQuestion</h1>
+
+<h4>Question</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditQuestion">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="QuestionId" />
+            <div class="form-group">
+                <label asp-for="QuestionText" class="control-label"></label>
+                <input asp-for="QuestionText" class="form-control" value="@Model.QuestionText" />
+                <span asp-validation-for="QuestionText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnswerA" class="control-label"></label>
+                <input asp-for="AnswerA" class="form-control" value="@Model.AnswerA" />
+                <span asp-validation-for="AnswerA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnswerB" class="control-label"></label>
+                <input asp-for="AnswerB" class="form-control" value="@Model.AnswerB" />
+                <span asp-validation-for="AnswerB" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnswerC" class="control-label"></label>
+                <input asp-for="AnswerC" class="form-control" value="@Model.AnswerC" />
+                <span asp-validation-for="AnswerC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnswerD" class="control-label"></label>
+                <input asp-for="AnswerD" class="form-control" value="@Model.AnswerD" />
+                <span asp-validation-for="AnswerD" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CorrectAnswer" class="control-label"></label>
+                <select asp-for="CorrectAnswer" class="form-control" value="@Model.CorrectAnswer" />
+                <option value="A">CorrectAnswer A</option>
+                <option value="B">CorrectAnswer B</option>
+                <option value="C">CorrectAnswer C</option>
+                <option value="D">CorrectAnswer D</option>
+                </select>
+                <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
+<a asp-action="Question" asp-route-id="@Model.Qcid">Back to List</a>
+<div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

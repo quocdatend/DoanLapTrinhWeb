@@ -152,18 +152,14 @@ public partial class DatawebengContext : DbContext
             entity.ToTable("QUESTIONS-CONTENT");
 
             entity.Property(e => e.Contentid).HasColumnName("CONTENTID");
-            entity.Property(e => e.Adudi)
-                .HasMaxLength(200)
-                .HasColumnName("ADUDI");
+            entity.Property(e => e.Adudi).HasColumnName("ADUDI");
             entity.Property(e => e.Examid).HasColumnName("EXAMID");
-            entity.Property(e => e.Picture)
-                .HasMaxLength(200)
-                .HasColumnName("PICTURE");
+            entity.Property(e => e.Picture).HasColumnName("PICTURE");
             entity.Property(e => e.QuestionsStyle)
                 .HasColumnType("ntext")
                 .HasColumnName("QUESTIONS-STYLE");
             entity.Property(e => e.TextContent)
-                .HasMaxLength(200)
+                .HasMaxLength(500)
                 .HasColumnName("TEXT-CONTENT");
             entity.Property(e => e.TextQuestionsbigIfhave)
                 .HasColumnType("ntext")
