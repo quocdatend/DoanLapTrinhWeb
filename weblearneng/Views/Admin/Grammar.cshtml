@@ -1,8 +1,8 @@
-﻿@model PagedList<Vocabulary>
+﻿@model PagedList<Grammar>
 @using X.PagedList;
 @using X.PagedList.Mvc.Core
 @{
-    ViewData["Title"] = "Vocabulary Page";
+    ViewData["Title"] = "Grammar Page";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 <head>
@@ -31,10 +31,10 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col">
-                    <h1 class="h3 mb-2 text-gray-800">Vocabulary - Admin</h1>
+                    <h1 class="h3 mb-2 text-gray-800">Grammar - Admin</h1>
                 </div>
                 <div class="col">
-                    <div class="scroll-to-section"><a asp-controller="Admin" asp-action="AddVocabulary" class="btn btn-primary">ADD new Vocabulary</a></div>
+                    <div class="scroll-to-section"><a asp-controller="Admin" asp-action="AddGrammar" class="btn btn-primary">ADD new Grammar</a></div>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>View</th>
+                                <th>VIEW</th>
                                 <th>EDIT</th>
                                 <th>DELETE</th>
                             </tr>
@@ -58,20 +58,20 @@
                         {
                             <tbody>
                                 <tr>
-                                    <td>@item.Nameen</td>
+                                    <td>@item.Name</td>
                                     <td>
-                                        <form asp-action="ViewVocabulary" asp-route-nameen="@item.Nameen" method="post">
+                                        <form asp-action="ViewGrammar" asp-route-name="@item.Name" method="post">
                                             <button type="submit"><i class="fas fa-tasks"></i></button>
                                         </form>
                                     </td>
                                     <td>
-                                        <form asp-action="EditVocabulary" asp-route-nameen="@item.Nameen" method="post">
+                                        <form asp-action="EditGrammar" asp-route-name="@item.Name" method="post">
                                             <button type="submit"><i class="fas fa-edit"></i></button>
                                         </form>
                                     </td>
                                     <td>
-                                        <form asp-controller="Admin" asp-action="DeleteVocabularyView" asp-route-nameen="@item.Nameen" method="post">
-											<button type="submit" id="Delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                        <form asp-controller="Admin" asp-action="DeleteGrammarView" asp-route-name="@item.Name" method="post">
+                                            <button type="submit" id="Delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -79,7 +79,7 @@
                         }
                     </table>
                     <div class="ListPage">
-                        @Html.PagedListPager(Model, page => Url.Action("Vocabulary", new { search = @ViewBag.Search, page = page }))
+                        @Html.PagedListPager(Model, page => Url.Action("Grammar", new { search = @ViewBag.Search, page = page }))
                     </div>
                 </div>
             </div>

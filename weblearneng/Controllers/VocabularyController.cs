@@ -23,7 +23,7 @@ namespace demotienganh.Controllers
 
         public IActionResult Search(string search, int? page)
         {
-            int pageSize = 2;
+            int pageSize = 5;
             int pageNumber = page == null || pageSize <1 ? 1 : page.Value;
             var lstnewVocabualry = db.Vocabularies.Where(x => x.Nameen.Contains(search)).ToList();
             PagedList<Vocabulary> lst = new PagedList<Vocabulary>(lstnewVocabualry, pageNumber, pageSize);

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using weblearneng.Models;
 using X.PagedList;
+using static Azure.Core.HttpHeader;
 
 namespace weblearneng.Controllers
 {
@@ -33,11 +34,20 @@ namespace weblearneng.Controllers
         // Admin Vocabulary
         public IActionResult Vocabulary(int? page)
         {
-            int pageSize = 6;
-            int pageNumber = page == null || pageSize < 1 ? 1 : page.Value;
-            var lstnewVocabualry = dbcontext.Vocabularies.ToList();
-            PagedList<Vocabulary> lstVocabulary = new PagedList<Vocabulary>(lstnewVocabualry, pageNumber, pageSize);
-            return View(lstVocabulary);
+            string role = HttpContext.Session.GetString("Role");
+            _logger.LogInformation("Role retrieved from Session: {Role}", role);
+            if (role != null && role == "True")
+            {
+                int pageSize = 6;
+                int pageNumber = page == null || pageSize < 1 ? 1 : page.Value;
+                var lstnewVocabualry = dbcontext.Vocabularies.ToList();
+                PagedList<Vocabulary> lstVocabulary = new PagedList<Vocabulary>(lstnewVocabualry, pageNumber, pageSize);
+                return View(lstVocabulary);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public IActionResult AddVocabulary()
@@ -110,7 +120,7 @@ namespace weblearneng.Controllers
                         new SqlParameter("@voca_type", type),
                         new SqlParameter("@voca_title", title)
                     };
-                    dbcontext.Database.ExecuteSqlRaw("EditVocabualry @nameen, @voca_fchar, @voca_nameen, @voca_namevn, @voca_type, @voca_title", parameter);
+                    dbcontext.Database.ExecuteSqlRaw("EditVocabulary @nameen, @voca_fchar, @voca_nameen, @voca_namevn, @voca_type, @voca_title", parameter);
                 } else
                 {
                     var parameter = new[]
@@ -128,7 +138,6 @@ namespace weblearneng.Controllers
             {
                 TempData["Error"] = "Input First Char must 1 value!";
             }
-            var thisname = dbcontext.Vocabularies.Where(x => x.Nameen.Equals(nnameen)).FirstOrDefault();
             TempData["data"] = nnameen;
             return RedirectToAction("EditVocabulary");
         }
@@ -476,7 +485,134 @@ namespace weblearneng.Controllers
         }
 
         //Admin Grammar
+        public IActionResult Grammar(int? page)
+        {
+            string role = HttpContext.Session.GetString("Role");
+            _logger.LogInformation("Role retrieved from Session: {Role}", role);
+            if (role != null && role == "True")
+            {
+                int pageSize = 6;
+                int pageNumber = page == null || pageSize < 1 ? 1 : page.Value;
+                var lstnewGrammar = dbcontext.Grammars.ToList();
+                PagedList<Grammar> lstGrammar = new PagedList<Grammar>(lstnewGrammar, pageNumber, pageSize);
+                return View(lstGrammar);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
 
+        public IActionResult AddGrammar()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddGrammar(string name,string title,string confirm,string doubt,string negative,string order)
+        {
+
+            if (name != null && title != null)
+            {
+                var checkNameen = dbcontext.Grammars.Where(x => x.Name == name).FirstOrDefault();
+                if (checkNameen == null)
+                {
+                    var newaVoca = new Grammar()
+                    {
+                        Name = name,
+                        Title = title,
+                        Confirm = confirm,
+                        Doubt = doubt,
+                        Negative = negative,
+                        Order = order
+                    };
+                    dbcontext.Grammars.Add(newaVoca);
+                    dbcontext.SaveChanges();
+                    ViewBag.Success = "Save Successful!";
+                }else
+                {
+                    ViewBag.Error = "The word you entered already exists!";
+                }
+            }
+            return View();
+        }
+
+        public IActionResult ViewGrammar(string name)
+        {
+            var thisname = dbcontext.Grammars.Where(x => x.Name.Equals(name)).FirstOrDefault();
+            return View(thisname);
+        }
+
+		public IActionResult EditGrammar(string name)
+		{
+			if (TempData["datagrammar"] != null)
+			{
+				var newthisname = dbcontext.Grammars.Where(x => x.Name.Equals(TempData["datagrammar"])).FirstOrDefault();
+				return View(newthisname);
+			}
+            var thisname = dbcontext.Grammars.Where(x => x.Name.Equals(name)).FirstOrDefault();
+			return View(thisname);
+		}
+
+		[HttpPost]
+		public IActionResult EditGrammarSQL(string nname, string name, string title, string? confirm, string? doubt, string? negative, string? order)
+		{
+            ViewBag.isTrue = false;
+            if (order != null && confirm == null && doubt == null && negative == null)
+			{
+				var parameter = new[]
+				{
+					new SqlParameter("@name", nname),
+					new SqlParameter("@grammar_name", name),
+					new SqlParameter("@grammar_title", title),
+                    new SqlParameter("@grammar_order", order)
+				};
+                ViewBag.isTrue = true;
+				dbcontext.Database.ExecuteSqlRaw("EditGrammarWithOrder @name, @grammar_name, @grammar_title, @grammar_order", parameter);
+                TempData["Successgrammar"] = "Save Successful!";
+            } else if(order == null && confirm != null && doubt != null && negative != null)
+            {
+                var parameter = new[]
+                {
+                    new SqlParameter("@name", nname),
+                    new SqlParameter("@grammar_name", name),
+                    new SqlParameter("@grammar_title", title),
+                    new SqlParameter("@grammar_confirm", confirm),
+                    new SqlParameter("@grammar_doubt", doubt),
+                    new SqlParameter("@grammar_negative", negative)
+                };
+                ViewBag.isTrue = true;
+                dbcontext.Database.ExecuteSqlRaw("EditGrammarWithOrderNull @name, @grammar_name, @grammar_title, @grammar_confirm, @grammar_doubt, @grammar_negative", parameter);
+                TempData["Successgrammar"] = "Save Successful!";
+            } else
+            {
+                TempData["Errorgrammar"] = "Just input OrderTense is Null and input Negative, Doublt, Confirm not Null OR vice versa";
+            }
+            if(ViewBag.isTrue)
+            {
+                TempData["datagrammar"] = name;
+            } else
+            {
+                TempData["datagrammar"] = nname;
+            }
+			return RedirectToAction("EditGrammar");
+		}
+
+        public IActionResult DeleteGrammar(string name)
+        {
+            var checkNameen = dbcontext.Grammars.Where(x => x.Name == name).FirstOrDefault();
+            dbcontext.Grammars.Remove(checkNameen);
+            dbcontext.SaveChanges();
+            TempData["page"] = 1;
+            return RedirectToAction("Grammar", "Admin");
+        }
+
+        public IActionResult DeleteGrammarView(string name)
+        {
+            var thisname = dbcontext.Grammars.Where(x => x.Name.Equals(name)).FirstOrDefault();
+            return View(thisname);
+        }
         //Admin User
     }
 }

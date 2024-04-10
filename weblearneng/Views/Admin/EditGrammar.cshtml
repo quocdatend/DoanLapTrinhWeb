@@ -1,0 +1,52 @@
+﻿@model weblearneng.Models.Grammar
+
+@{
+    ViewData["Title"] = "Edit Grammar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    string name = Model.Name;
+}
+
+<h1>Edit Vocabualry</h1>
+
+<hr />
+<div class="row" style="justify-content: center;">
+    <div class="col-md-4">
+        <form asp-action="EditGrammarSQL" asp-route-nname="@name">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input name="name" class="form-control" value="@Model.Name" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Title</label>
+                <textarea name="title" class="form-control" value="@Model.Title" required>@Model.Title</textarea>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Confirm</label>
+                <input name="confirm" class="form-control" value="@Model.Confirm" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Doubt</label>
+                <input name="doubt" class="form-control" value="@Model.Doubt" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Negative</label>
+                <input name="negative" class="form-control" value="@Model.Negative" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">OrderTense</label>
+                <input name="order" class="form-control" value="@Model.Order" />
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <p style="color: red">@TempData["Errorgrammar"]</p>
+                <p style="color: green">@TempData["Successgrammar"]</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a style="padding-left: 20px" asp-action="Grammar">Back to List</a>
+</div>
