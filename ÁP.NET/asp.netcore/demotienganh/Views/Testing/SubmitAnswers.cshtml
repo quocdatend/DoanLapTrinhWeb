@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Vocabulary Page";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@model Dictionary<int, string>
+
+<h1>Các câu trả lời đã chọn:</h1>
+@foreach (var kvp in Model)
+{
+    <div>
+        <p>Câu hỏi ID: @kvp.Key</p>
+        <p>Đáp án đã chọn: @kvp.Value</p>
+    </div>
+}
