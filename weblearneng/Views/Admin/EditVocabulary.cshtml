@@ -1,0 +1,48 @@
+﻿@model weblearneng.Models.Vocabulary
+
+@{
+    ViewData["Title"] = "Edit Vocabualry";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    string name = @Model.Nameen;
+}
+
+<h1>Edit Vocabualry</h1>
+
+<hr />
+<div class="row" style="justify-content: center;">
+    <div class="col-md-4">
+        <form asp-action="EditVocabularySQL" asp-route-nname="@name">
+            <div class="form-group">
+                <label class="control-label">First Char</label>
+                <input name="fchar" class="form-control" value="@Model.Fchar" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">English</label>
+                <input name="nnameen" class="form-control" Value="@Model.Nameen" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">VietNamese</label>
+                <input name="namevn" class="form-control" Value="@Model.Namevn" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Type</label>
+                <input name="type" class="form-control" Value="@Model.Type" required />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Title</label>
+                <input name="title" class="form-control" Value="@Model.Title" />
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            <div class="form-group" style="text-align:center;">
+                <p style="color: red">@TempData["Error"]</p>
+                <p style="color: green">@TempData["Success"]</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a style="padding-left: 20px" asp-action="Vocabulary">Back to List</a>
+</div>
