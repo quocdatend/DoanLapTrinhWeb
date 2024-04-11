@@ -1,0 +1,80 @@
+﻿@model PagedList<Account>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@{
+    ViewData["Title"] = "Account Page";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<head>
+    <style>
+        .ListPage ul {
+            justify-content: center;
+        }
+
+            .ListPage ul li {
+                background-color: #2f56c8;
+                margin: 0px 5px;
+                padding: 0px 6px;
+                border-radius: 10px;
+                border: 1px solid #2f56c8;
+            }
+
+                .ListPage ul li a {
+                    color: white;
+                }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="h3 mb-2 text-gray-800">User Account - Admin</h1>
+                </div>
+                <div class="col">
+                    <div class="scroll-to-section"><a asp-controller="Admin" asp-action="AddUserAccount" class="btn btn-primary">ADD new Account</a></div>
+                </div>
+            </div>
+        </div>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>DELETE</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Pass</td>
+                                    <td>
+                                        <form asp-controller="Admin" asp-action="DeleteUserAccountView" asp-route-name="@item.Name" asp-route-email="@item.Email" method="post">
+                                            <button type="submit" id="Delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                    <div class="ListPage">
+                        @Html.PagedListPager(Model, page => Url.Action("UserAccount", new { search = @ViewBag.Search, page = page }))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
