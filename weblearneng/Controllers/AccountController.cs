@@ -42,7 +42,9 @@ namespace demotienganh.Controllers
                 HttpContext.Session.SetInt32("idAccount", usercheck.Id);
                 // Lưu tên đăng nhập trong session
                 HttpContext.Session.SetString("username", userid);
-                if(usercheck.Role)
+                HttpContext.Session.SetString("nameAdmin", usercheck.Name);
+                HttpContext.Session.SetString("emailAdmin", usercheck.Email);
+                if (usercheck.Role)
                 {
                     HttpContext.Session.SetString("Role", usercheck.Role.ToString());
 					return RedirectToAction("Index", "Admin");
@@ -75,6 +77,8 @@ namespace demotienganh.Controllers
         {
             // Xóa tên đăng nhập khỏi session khi đăng xuất
             HttpContext.Session.Remove("username");
+            HttpContext.Session.Remove("nameAdmin");
+            HttpContext.Session.Remove("emailAdmin");
             return RedirectToAction("Index", "Home");
         }
 
