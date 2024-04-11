@@ -1,0 +1,42 @@
+﻿@model weblearneng.Models.Account
+
+@{
+    ViewData["Title"] = "Delete Grammar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Grammar</h1>
+
+<div>
+    <hr />
+    <dl class="row" style="padding: 0px 75px;">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pass)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pass)
+        </dd>
+    </dl>
+    <div style="display:flex; justify-content:flex-start; margin-left: 10px">
+        <form asp-action="DeleteUserAccount" asp-controller="Admin" asp-route-name="@Model.Name" asp-route-email="@Model.Email" method="post">
+            <button type="submit" class="btn btn-danger" style="margin-right: 8px">Delete</button>
+        </form>
+        <form asp-action="UserAccount" asp-controller="Admin" method="post">
+            <button type="submit" class="btn btn-secondary">Back</button>
+        </form>
+    </div>
+
+</div>
+

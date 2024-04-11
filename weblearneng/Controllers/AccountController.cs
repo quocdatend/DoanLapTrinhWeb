@@ -34,7 +34,7 @@ namespace demotienganh.Controllers
         { 
             string newhash = CalculateMD5(password);
             // Kiểm tra tên đăng nhập và mật khẩu
-            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(newhash.Substring(0,12))).FirstOrDefault();
+            var usercheck = db.Accounts.Where(x => x.Name.Equals(username) && x.Pass.Equals(newhash)).FirstOrDefault();
             if (usercheck != null)
             {
                 
@@ -94,7 +94,7 @@ namespace demotienganh.Controllers
                     ViewBag.Error = "Error: Password not same!";
                 } else
                 {
-                    string repasshash = CalculateMD5(re_pass);
+                    string repasshash = CalculateMD5(pass);
                     var newaccount = new Account()
                     {
                         Name = name,
@@ -192,7 +192,7 @@ namespace demotienganh.Controllers
                 ViewBag.error = "Your input password not same!";
             } else if (resetpass != null)
             {
-                var repasshash = CalculateMD5(resetpass);
+                string repasshash = CalculateMD5(resetpass);
                 var parameter = new[]
                 {
                     new SqlParameter("@account_id", account.Id),

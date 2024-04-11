@@ -2,9 +2,11 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Text;
 using weblearneng.Models;
 using X.PagedList;
 using static Azure.Core.HttpHeader;
+using System.Security.Cryptography;
 
 namespace weblearneng.Controllers
 {
@@ -680,6 +682,86 @@ namespace weblearneng.Controllers
             TempData["nameDeleteGraEx"] = name;
             return RedirectToAction("ViewGrammarExample", "Admin");
         }
+
+
         //Admin User
+        public IActionResult UserAccount(int? page)
+        {
+
+            string role = HttpContext.Session.GetString("Role");
+            _logger.LogInformation("Role retrieved from Session: {Role}", role);
+            if (role != null && role == "True")
+            {
+                int pageSize = 6;
+                int pageNumber = page == null || pageSize < 1 ? 1 : page.Value;
+                var checkuser = dbcontext.Accounts.Where(x => x.Role == false).ToList();
+                PagedList<Account> lstVocabulary = new PagedList<Account>(checkuser, pageNumber, pageSize);
+                return View(lstVocabulary);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public IActionResult AddUserAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddUserAccount(string name, string email, string pass)
+        {
+            var checkuser = dbcontext.Accounts.Where(x => x.Email == email).FirstOrDefault();
+            if (checkuser == null)
+            {
+                string passhash = CalculateMD5(pass);
+                var newaVoca = new Account()
+                {
+                    Name = name,
+                    Email = email,
+                    Role = false,
+                    Pass = passhash
+                };
+                dbcontext.Accounts.Add(newaVoca);
+                dbcontext.SaveChanges();
+                ViewBag.Success = "Save Successful!";
+            } else
+            {
+                ViewBag.Error = "Email is aready!";
+            }
+            ViewBag.Name = name;
+            ViewBag.Pass = pass;
+            return View();
+        }
+
+        public string CalculateMD5(string input)
+        {
+            byte[] tmpSource = ASCIIEncoding.ASCII.GetBytes(input);
+
+            //Compute hash based on source data
+            byte[] tmpHash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+            int i;
+            StringBuilder sOutput = new StringBuilder(tmpHash.Length);
+            for (i = 0; i < tmpHash.Length - 1; i++)
+            {
+                sOutput.Append(tmpHash[i].ToString("X2"));
+            }
+            return sOutput.ToString();
+        }
+
+        public IActionResult DeleteUserAccount(string name, string email)
+        {
+            var checkuser = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            dbcontext.Accounts.Remove(checkuser);
+            dbcontext.SaveChanges();
+            return RedirectToAction("UserAccount", "Admin");
+        }
+
+        public IActionResult DeleteUserAccountView(string name, string email)
+        {
+            var checkuser = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            return View(checkuser);
+        }
     }
 }
