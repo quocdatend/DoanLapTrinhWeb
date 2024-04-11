@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link href="~/layoutadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
     <title>EduWell - Education HTML5 Template</title>
@@ -26,10 +27,85 @@
     <link rel="stylesheet" href="~/layoutindex/assets/css/templatemo-eduwell-style.css">
     <link rel="stylesheet" href="~/layoutindex/assets/css/owl.css">
     <link rel="stylesheet" href="~/layoutindex/assets/css/lightbox.css">
-    <!--
 
+    
 
-    -->
+    <style>
+        .account-container {
+            position: relative;
+            width: 150px;
+            height: 50px;
+        }
+
+        .account-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(-145deg, rgba(219, 138, 222, 1) 0%, rgba(246, 191, 159, 1) 100%);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            .account-btn i {
+                color: white;
+                margin-left: 10px;
+            }
+
+        .info-box {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 150px;
+            height: 120px;
+            background: linear-gradient(-145deg, rgba(219, 138, 222, 1) 0%, rgba(246, 191, 159, 1) 100%);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0px 10px 14px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+            .info-box p {
+                padding: 10px;
+                font-size: 16px;
+                color: #333;
+            }
+
+            .info-box ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .info-box li {
+                padding: 10px;
+                border-top: 1px solid #ccc;
+            }
+
+                .info-box li:first-child {
+                    border-top: none;
+                }
+
+            .info-box a {
+                display: inline!important;
+                text-decoration: none;
+                color: white!important;
+                font-size: 16px;
+            }
+
+                .info-box i {
+                    color: white;
+                    margin-left: 10px;
+                }
+
+        .account-container.active .info-box {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -60,8 +136,14 @@
                             }
                             @if (!string.IsNullOrEmpty(username))
                             {
-                                <div class="main-button-gradient">
-                                    <div>@Html.ActionLink("Logout", "Logout", "Account")</div>
+                                <div class="account-container">
+                                    <button class="account-btn main-button-gradient">Account<i class="fas fa-solid fa-sort-down"></i></button>
+                                    <div class="info-box">
+                                        <ul>
+                                            <li><a asp-action="ProfileUser" asp-controller="Account">Profile</a><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i></li>
+                                            <li><a asp-action="Logout" asp-controller="Account">Logout</a><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             }
                             else
@@ -142,6 +224,11 @@
 
         $(window).scroll(function () {
             checkSection();
+        });
+        let accountContainer = document.querySelector(".account-container");
+
+        accountContainer.addEventListener("click", () => {
+            accountContainer.classList.toggle("active");
         });
     </script>
 </body>
