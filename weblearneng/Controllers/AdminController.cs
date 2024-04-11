@@ -601,8 +601,11 @@ namespace weblearneng.Controllers
 
         public IActionResult DeleteGrammar(string name)
         {
-            var checkNameen = dbcontext.Grammars.Where(x => x.Name == name).FirstOrDefault();
-            dbcontext.Grammars.Remove(checkNameen);
+            var checkNameGrEx = dbcontext.Testgrammars.Where(x => x.Name == name).FirstOrDefault();
+            dbcontext.Testgrammars.Remove(checkNameGrEx);
+            dbcontext.SaveChanges();
+            var checkNameGr = dbcontext.Grammars.Where(x => x.Name == name).FirstOrDefault();
+            dbcontext.Grammars.Remove(checkNameGr);
             dbcontext.SaveChanges();
             TempData["page"] = 1;
             return RedirectToAction("Grammar", "Admin");
@@ -612,6 +615,70 @@ namespace weblearneng.Controllers
         {
             var thisname = dbcontext.Grammars.Where(x => x.Name.Equals(name)).FirstOrDefault();
             return View(thisname);
+        }
+            // Grammar Example
+        public IActionResult ViewGrammarExample(string name)
+        {
+            TempData["nameViewGrammarExample"] = name;
+            var lstExample = dbcontext.Testgrammars.Where(x => x.Name == name).ToList();
+            if(TempData["nameDeleteGraEx"]!= null)
+            {
+                var lstExampleDelete = dbcontext.Testgrammars.Where(x => x.Name == TempData["nameDeleteGraEx"]).ToList();
+                return View(lstExampleDelete);
+            }
+            return View(lstExample);
+        }
+
+        public IActionResult AddGrammarExample()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddGrammarExample(string name, string exor, string ex1, string ex2, string ex3)
+        {
+
+            if (name != null)
+            {
+                if (exor == null && ex1 != null && ex2 != null && ex3 != null)
+                {
+                    var newaVoca = new Testgrammar()
+                    {
+                        Name = name,
+                        Ex1 = ex1,
+                        Ex2 = ex2,
+                        Ex3 = ex3
+                    };
+                    dbcontext.Testgrammars.Add(newaVoca);
+                    dbcontext.SaveChanges();
+                    ViewBag.Success = "Save Successful!";
+                }
+                else if(exor != null && ex1 == null && ex2 == null && ex3 == null)
+                {
+                    var newaVoca = new Testgrammar()
+                    {
+                        Name = name,
+                        ExOr = exor
+                    };
+                    dbcontext.Testgrammars.Add(newaVoca);
+                    dbcontext.SaveChanges();
+                    ViewBag.Success = "Save Successful!";
+                } else
+                {
+                    ViewBag.Error = "Just input Exor Null and ex1,ex2,ex3 not Null OR vice versa";
+                }
+            }
+            TempData["nameViewGrammarExample"] = name;
+            return View();
+        }
+
+        public IActionResult DeleteGrammarExample(string name, int id)
+        {
+            TempData["nameViewGrammarExample"] = name;
+            var checkNameen = dbcontext.Testgrammars.Where(x => x.Name == name && x.Id == id).FirstOrDefault();
+            dbcontext.Testgrammars.Remove(checkNameen);
+            dbcontext.SaveChanges();
+            TempData["nameDeleteGraEx"] = name;
+            return RedirectToAction("ViewGrammarExample", "Admin");
         }
         //Admin User
     }

@@ -16,4 +16,6 @@ public partial class Grammar
     public string? Negative { get; set; }
 
     public string? Order { get; set; }
+
+    public virtual ICollection<Testgrammar> Testgrammars { get; set; } = new List<Testgrammar>();
 }
