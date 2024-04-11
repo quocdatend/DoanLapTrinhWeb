@@ -172,10 +172,11 @@ public partial class DatawebengContext : DbContext
 
         modelBuilder.Entity<Testgrammar>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("TESTGRAMMAR");
+            entity.ToTable("TESTGRAMMAR");
 
+            entity.HasIndex(e => e.Name, "IX_TESTGRAMMAR");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ex1).HasMaxLength(150);
             entity.Property(e => e.Ex2).HasMaxLength(150);
             entity.Property(e => e.Ex3).HasMaxLength(150);
@@ -184,7 +185,7 @@ public partial class DatawebengContext : DbContext
                 .HasMaxLength(40)
                 .HasColumnName("NAME");
 
-            entity.HasOne(d => d.NameNavigation).WithMany()
+            entity.HasOne(d => d.NameNavigation).WithMany(p => p.Testgrammars)
                 .HasForeignKey(d => d.Name)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__TESTGRAMMA__NAME__5FB337D6");

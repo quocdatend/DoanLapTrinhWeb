@@ -49,6 +49,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>View Example</th>
                                 <th>VIEW</th>
                                 <th>EDIT</th>
                                 <th>DELETE</th>
@@ -59,6 +60,11 @@
                             <tbody>
                                 <tr>
                                     <td>@item.Name</td>
+                                    <td>
+                                        <form asp-action="ViewGrammarExample" asp-route-name="@item.Name" method="post">
+                                            <button type="submit"><i class="fas fa-tasks"></i></button>
+                                        </form>
+                                    </td>
                                     <td>
                                         <form asp-action="ViewGrammar" asp-route-name="@item.Name" method="post">
                                             <button type="submit"><i class="fas fa-tasks"></i></button>

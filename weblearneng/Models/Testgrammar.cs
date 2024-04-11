@@ -15,5 +15,7 @@ public partial class Testgrammar
 
     public string? Ex3 { get; set; }
 
+    public int Id { get; set; }
+
     public virtual Grammar NameNavigation { get; set; } = null!;
 }
