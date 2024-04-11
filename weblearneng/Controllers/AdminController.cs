@@ -7,6 +7,7 @@ using weblearneng.Models;
 using X.PagedList;
 using static Azure.Core.HttpHeader;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace weblearneng.Controllers
 {
@@ -762,6 +763,39 @@ namespace weblearneng.Controllers
         {
             var checkuser = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
             return View(checkuser);
+        }
+
+        // Profile Account
+        public IActionResult ProfileAdmin()
+        {
+            string name = HttpContext.Session.GetString("nameAdmin");
+            string email = HttpContext.Session.GetString("emailAdmin");
+            var checkadmin = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            return View(checkadmin);
+        }
+
+        [HttpPost]
+        public IActionResult ProfileAdmin(string? name)
+        {
+            string email = HttpContext.Session.GetString("emailAdmin");
+            if (string.IsNullOrEmpty(name))
+            {
+                ViewBag.Error = "Name not Null!";
+            } else
+            {
+                var parameter = new[]
+                {
+                        new SqlParameter("@name", name),
+                        new SqlParameter("@email", email),
+                    };
+                ViewBag.isTrue = true;
+                dbcontext.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
+                ViewBag.Success = "Save Successful!";
+                HttpContext.Session.Remove("nameAdmin");
+                HttpContext.Session.SetString("nameAdmin", name);
+            }
+            var checkadmin = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            return View(checkadmin);
         }
     }
 }
