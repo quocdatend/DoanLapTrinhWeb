@@ -716,20 +716,29 @@ namespace weblearneng.Controllers
             var checkuser = dbcontext.Accounts.Where(x => x.Email == email).FirstOrDefault();
             if (checkuser == null)
             {
-                string passhash = CalculateMD5(pass);
-                var newaVoca = new Account()
+                var checkname = dbcontext.Accounts.Where(x => x.Name.Equals(name)).FirstOrDefault();
+                if (checkname == null)
                 {
-                    Name = name,
-                    Email = email,
-                    Role = false,
-                    Pass = passhash
-                };
-                dbcontext.Accounts.Add(newaVoca);
-                dbcontext.SaveChanges();
-                ViewBag.Success = "Save Successful!";
+                    string passhash = CalculateMD5(pass);
+                    var newaVoca = new Account()
+                    {
+                        Name = name,
+                        Email = email,
+                        Role = false,
+                        Pass = passhash
+                    };
+                    dbcontext.Accounts.Add(newaVoca);
+                    dbcontext.SaveChanges();
+                    ViewBag.Success = "Save Successful!";
+                } else
+                {
+                    ViewBag.Email = email;
+                    ViewBag.Error = "The name aready exists!";
+                }
+                
             } else
             {
-                ViewBag.Error = "Email is aready!";
+                ViewBag.Error = "Email is already exists!";
             }
             ViewBag.Name = name;
             ViewBag.Pass = pass;
@@ -783,16 +792,27 @@ namespace weblearneng.Controllers
                 ViewBag.Error = "Name not Null!";
             } else
             {
-                var parameter = new[]
+                var checkname = dbcontext.Accounts.Where(x => x.Name == name).FirstOrDefault();
+                if(checkname == null)
                 {
-                        new SqlParameter("@name", name),
-                        new SqlParameter("@email", email),
-                    };
-                ViewBag.isTrue = true;
-                dbcontext.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
-                ViewBag.Success = "Save Successful!";
-                HttpContext.Session.Remove("nameAdmin");
-                HttpContext.Session.SetString("nameAdmin", name);
+                    var parameter = new[]
+                    {
+                            new SqlParameter("@name", name),
+                            new SqlParameter("@email", email),
+                        };
+                    ViewBag.isTrue = true;
+                    dbcontext.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
+                    ViewBag.Success = "Save Successful!";
+                    HttpContext.Session.Remove("nameAdmin");
+                    HttpContext.Session.SetString("nameAdmin", name);
+                } else
+                {
+                    ViewBag.Error = "The name aready exists!";
+                    string newname = HttpContext.Session.GetString("nameAdmin");
+                    var check = dbcontext.Accounts.Where(x => x.Name == newname && x.Email == email).FirstOrDefault();
+                    return View(check);
+                }
+                
             }
             var checkadmin = dbcontext.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
             return View(checkadmin);

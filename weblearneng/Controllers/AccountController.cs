@@ -89,32 +89,58 @@ namespace demotienganh.Controllers
             ViewBag.isTrue = true;        
             if(email != null && name != null && pass != null && re_pass != null)
             {
-                if(pass != re_pass)
+                var checkemail = db.Accounts.Where(x => x.Email.Equals(email)).FirstOrDefault();
+                if(checkemail == null)
                 {
-                    ViewBag.Name = name;
-                    ViewBag.Email = email;
-                    ViewBag.Pass = pass;
-                    ViewBag.Re_pass = re_pass;
-                    ViewBag.Error = "Error: Password not same!";
+                    if (pass != re_pass)
+                    {
+                        ViewBag.Name = name;
+                        ViewBag.Email = email;
+                        ViewBag.Pass = pass;
+                        ViewBag.Re_pass = re_pass;
+                        ViewBag.Error = "Error: Password not same!";
+                    }
+                    else
+                    {
+                        var checkname = db.Accounts.Where(x => x.Name.Equals(name)).FirstOrDefault();
+                        if (checkname == null)
+                        {
+                            string repasshash = CalculateMD5(pass);
+                            var newaccount = new Account()
+                            {
+                                Name = name,
+                                Email = email,
+                                Role = false,
+                                Pass = repasshash,
+                            };
+                            db.Accounts.Add(newaccount);
+                            db.SaveChanges();
+                            ViewBag.Name = name;
+                            ViewBag.Email = email;
+                            ViewBag.Pass = pass;
+                            ViewBag.Re_pass = re_pass;
+                            ViewBag.isTrue = true;
+                            ViewBag.Success = "Save Successful!";
+                        }
+                        else
+                        {
+                            ViewBag.Email = email;
+                            ViewBag.Pass = pass;
+                            ViewBag.Re_pass = re_pass;
+                            ViewBag.isTrue = true;
+                            ViewBag.Error = "The name aready exists!";
+                        }
+
+                    }
                 } else
                 {
-                    string repasshash = CalculateMD5(pass);
-                    var newaccount = new Account()
-                    {
-                        Name = name,
-                        Email = email,
-                        Role = false,
-                        Pass = repasshash,
-                    };
-                    db.Accounts.Add(newaccount);
-                    db.SaveChanges();
                     ViewBag.Name = name;
-                    ViewBag.Email = email;
                     ViewBag.Pass = pass;
                     ViewBag.Re_pass = re_pass;
                     ViewBag.isTrue = true;
-                    ViewBag.Success = "Save Successful!";
+                    ViewBag.Error = "The email aready exists!";
                 }
+                
             }
             return View();
         }
@@ -206,6 +232,51 @@ namespace demotienganh.Controllers
                 ViewBag.isTrue = true;
             }
             return View();
+        }
+
+        public IActionResult ProfileUser()
+        {
+            string name = HttpContext.Session.GetString("nameAdmin");
+            string email = HttpContext.Session.GetString("emailAdmin");
+            var checkadmin = db.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            return View(checkadmin);
+        }
+
+        [HttpPost]
+        public IActionResult ProfileUser(string? name)
+        {
+            string email = HttpContext.Session.GetString("emailAdmin");
+            if (string.IsNullOrEmpty(name))
+            {
+                ViewBag.Error = "Name not Null!";
+            }
+            else
+            {
+                var checkname = db.Accounts.Where(x => x.Name == name).FirstOrDefault();
+                if (checkname == null)
+                {
+                    var parameter = new[]
+                    {
+                            new SqlParameter("@name", name),
+                            new SqlParameter("@email", email),
+                        };
+                    ViewBag.isTrue = true;
+                    db.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
+                    ViewBag.Success = "Save Successful!";
+                    HttpContext.Session.Remove("nameAdmin");
+                    HttpContext.Session.SetString("nameAdmin", name);
+                }
+                else
+                {
+                    ViewBag.Error = "The name aready exists!";
+                    string newname = HttpContext.Session.GetString("nameAdmin");
+                    var check = db.Accounts.Where(x => x.Name == newname && x.Email == email).FirstOrDefault();
+                    return View(check);
+                }
+
+            }
+            var checkadmin = db.Accounts.Where(x => x.Name == name && x.Email == email).FirstOrDefault();
+            return View(checkadmin);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
