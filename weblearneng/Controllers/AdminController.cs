@@ -8,6 +8,7 @@ using X.PagedList;
 using static Azure.Core.HttpHeader;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace weblearneng.Controllers
 {
@@ -714,33 +715,69 @@ namespace weblearneng.Controllers
         public IActionResult AddUserAccount(string name, string email, string pass)
         {
             var checkuser = dbcontext.Accounts.Where(x => x.Email == email).FirstOrDefault();
-            if (checkuser == null)
+            if (checkuser == null && email.Contains("@gmail.com"))
             {
                 var checkname = dbcontext.Accounts.Where(x => x.Name.Equals(name)).FirstOrDefault();
-                if (checkname == null)
+                if (checkname == null && name.Length >= 8)
                 {
-                    string passhash = CalculateMD5(pass);
-                    var newaVoca = new Account()
+                    if (pass.Length >= 12)
                     {
-                        Name = name,
-                        Email = email,
-                        Role = false,
-                        Pass = passhash
-                    };
-                    dbcontext.Accounts.Add(newaVoca);
-                    dbcontext.SaveChanges();
-                    ViewBag.Success = "Save Successful!";
-                } else
+                        if (Regex.IsMatch(pass, "[A-Z]"))
+                        {
+                            if (Regex.IsMatch(pass, "[a-z]"))
+                            {
+                                if (Regex.IsMatch(pass, "[0-9]"))
+                                {
+                                    if (Regex.IsMatch(pass, "[!@#$%^&*(),.\"':{}|<>]"))
+                                    {
+                                        string passhash = CalculateMD5(pass);
+                                        var newaVoca = new Account()
+                                        {
+                                            Name = name,
+                                            Email = email,
+                                            Role = false,
+                                            Pass = passhash
+                                        };
+                                        dbcontext.Accounts.Add(newaVoca);
+                                        dbcontext.SaveChanges();
+                                        ViewBag.Success = "Save Successful!";
+                                    }
+                                    else
+                                    {
+                                        ViewBag.Error = "Password must contain at least one special character.";
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.Error = "Password must contain at least one digit.";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.Error = "Password must contain at least one lowercase letter.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Password must contain at least one uppercase letter.";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Error = "Password must be at least 12 characters long.";
+                    }
+                }
+                else
                 {
-                    ViewBag.Email = email;
                     ViewBag.Error = "The name aready exists!";
                 }
-                
+                  
             } else
             {
                 ViewBag.Error = "Email is already exists!";
             }
             ViewBag.Name = name;
+            ViewBag.Email = email;
             ViewBag.Pass = pass;
             return View();
         }
@@ -795,16 +832,26 @@ namespace weblearneng.Controllers
                 var checkname = dbcontext.Accounts.Where(x => x.Name == name).FirstOrDefault();
                 if(checkname == null)
                 {
-                    var parameter = new[]
+                    if (name.Length >= 8)
                     {
+                        var parameter = new[]
+                        {
                             new SqlParameter("@name", name),
                             new SqlParameter("@email", email),
                         };
-                    ViewBag.isTrue = true;
-                    dbcontext.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
-                    ViewBag.Success = "Save Successful!";
-                    HttpContext.Session.Remove("nameAdmin");
-                    HttpContext.Session.SetString("nameAdmin", name);
+                        ViewBag.isTrue = true;
+                        dbcontext.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
+                        ViewBag.Success = "Save Successful!";
+                        HttpContext.Session.Remove("nameAdmin");
+                        HttpContext.Session.SetString("nameAdmin", name);
+                    }
+                    else
+                    {
+                        ViewBag.Error = "The name must be at least 8 characters long.";
+                        string newname = HttpContext.Session.GetString("nameAdmin");
+                        var check = dbcontext.Accounts.Where(x => x.Name == newname && x.Email == email).FirstOrDefault();
+                        return View(check);
+                    }
                 } else
                 {
                     ViewBag.Error = "The name aready exists!";
