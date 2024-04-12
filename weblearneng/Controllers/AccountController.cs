@@ -86,62 +86,103 @@ namespace demotienganh.Controllers
         {
             ViewBag.Error = null;
             ViewBag.Success = null;
-            ViewBag.isTrue = true;        
+            ViewBag.isTrue = true;
             if(email != null && name != null && pass != null && re_pass != null)
             {
-                var checkemail = db.Accounts.Where(x => x.Email.Equals(email)).FirstOrDefault();
-                if(checkemail == null)
+                var checkuser = db.Accounts.Where(x => x.Email == email).FirstOrDefault();
+                if (checkuser == null && email.Contains("@gmail.com"))
                 {
-                    if (pass != re_pass)
+                    var checkname = db.Accounts.Where(x => x.Name.Equals(name)).FirstOrDefault();
+                    if (checkname == null)
                     {
-                        ViewBag.Name = name;
-                        ViewBag.Email = email;
-                        ViewBag.Pass = pass;
-                        ViewBag.Re_pass = re_pass;
-                        ViewBag.Error = "Error: Password not same!";
-                    }
-                    else
-                    {
-                        var checkname = db.Accounts.Where(x => x.Name.Equals(name)).FirstOrDefault();
-                        if (checkname == null)
+                        if (name.Length >= 8)
                         {
-                            string repasshash = CalculateMD5(pass);
-                            var newaccount = new Account()
+                            if (name.Length >= 8)
                             {
-                                Name = name,
-                                Email = email,
-                                Role = false,
-                                Pass = repasshash,
-                            };
-                            db.Accounts.Add(newaccount);
-                            db.SaveChanges();
-                            ViewBag.Name = name;
-                            ViewBag.Email = email;
-                            ViewBag.Pass = pass;
-                            ViewBag.Re_pass = re_pass;
-                            ViewBag.isTrue = true;
-                            ViewBag.Success = "Save Successful!";
+                                if (pass.Length >= 12)
+                                {
+                                    if (Regex.IsMatch(pass, "[A-Z]"))
+                                    {
+                                        if (Regex.IsMatch(pass, "[a-z]"))
+                                        {
+                                            if (Regex.IsMatch(pass, "[0-9]"))
+                                            {
+                                                if (Regex.IsMatch(pass, "[!@#$%^&*(),.\"':{}|<>]"))
+                                                {
+                                                    if (pass != re_pass)
+                                                    {
+                                                        ViewBag.Error = "Error: Password not same!";
+                                                    }
+                                                    else
+                                                    {
+                                                        string repasshash = CalculateMD5(pass);
+                                                        var newaccount = new Account()
+                                                        {
+                                                            Name = name,
+                                                            Email = email,
+                                                            Role = false,
+                                                            Pass = repasshash,
+                                                        };
+                                                        db.Accounts.Add(newaccount);
+                                                        db.SaveChanges();
+                                                        ViewBag.Name = name;
+                                                        ViewBag.Email = email;
+                                                        ViewBag.Pass = pass;
+                                                        ViewBag.Re_pass = re_pass;
+                                                        ViewBag.isTrue = true;
+                                                        ViewBag.Success = "Save Successful!";
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ViewBag.Error = "Password must contain at least one special character.";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ViewBag.Error = "Password must contain at least one digit.";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ViewBag.Error = "Password must contain at least one lowercase letter.";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ViewBag.Error = "Password must contain at least one uppercase letter.";
+                                    }
+                                }
+                                else
+                                {
+                                    ViewBag.Error = "Password must be at least 12 characters long.";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.Error = "The name must be at least 8 characters long.";
+                            }
                         }
                         else
                         {
-                            ViewBag.Email = email;
-                            ViewBag.Pass = pass;
-                            ViewBag.Re_pass = re_pass;
-                            ViewBag.isTrue = true;
-                            ViewBag.Error = "The name aready exists!";
+                            ViewBag.Error = "The name must be at least 8 characters long.";
                         }
-
                     }
-                } else
-                {
-                    ViewBag.Name = name;
-                    ViewBag.Pass = pass;
-                    ViewBag.Re_pass = re_pass;
-                    ViewBag.isTrue = true;
-                    ViewBag.Error = "The email aready exists!";
+                    else
+                    {
+                        ViewBag.Error = "The name aready exists!";
+                    }
                 }
-                
+                else
+                {
+                    ViewBag.Error = "Email is already exists!";
+                }  
             }
+            ViewBag.Name = name;
+            ViewBag.Email = email;
+            ViewBag.Pass = pass;
+            ViewBag.Re_pass = re_pass;
+            ViewBag.isTrue = true;
             return View();
         }
 
@@ -222,14 +263,49 @@ namespace demotienganh.Controllers
                 ViewBag.error = "Your input password not same!";
             } else if (resetpass != null)
             {
-                string repasshash = CalculateMD5(resetpass);
-                var parameter = new[]
+                if (resetpass.Length >= 12)
                 {
-                    new SqlParameter("@account_id", account.Id),
-                    new SqlParameter("@account_pass", repasshash)
-                };
-                db.Database.ExecuteSqlRaw("UpdateAccountInFGPass @account_id, @account_pass", parameter);
-                ViewBag.isTrue = true;
+                    if (Regex.IsMatch(resetpass, "[A-Z]"))
+                    {
+                        if (Regex.IsMatch(resetpass, "[a-z]"))
+                        {
+                            if (Regex.IsMatch(resetpass, "[0-9]"))
+                            {
+                                if (Regex.IsMatch(resetpass, "[!@#$%^&*(),.\"':{}|<>]"))
+                                {
+                                    string repasshash = CalculateMD5(resetpass);
+                                    var parameter = new[]
+                                    {
+                                        new SqlParameter("@account_id", account.Id),
+                                        new SqlParameter("@account_pass", repasshash)
+                                    };
+                                    db.Database.ExecuteSqlRaw("UpdateAccountInFGPass @account_id, @account_pass", parameter);
+                                    ViewBag.isTrue = true;
+                                }
+                                else
+                                {
+                                    ViewBag.error = "Password must contain at least one special character.";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.error = "Password must contain at least one digit.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.error = "Password must contain at least one lowercase letter.";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.error = "Password must contain at least one uppercase letter.";
+                    }
+                }
+                else
+                {
+                    ViewBag.error = "Password must be at least 12 characters long.";
+                }
             }
             return View();
         }
@@ -255,20 +331,31 @@ namespace demotienganh.Controllers
                 var checkname = db.Accounts.Where(x => x.Name == name).FirstOrDefault();
                 if (checkname == null)
                 {
-                    var parameter = new[]
+                    if (name.Length >= 8)
                     {
-                            new SqlParameter("@name", name),
-                            new SqlParameter("@email", email),
-                        };
-                    ViewBag.isTrue = true;
-                    db.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
-                    ViewBag.Success = "Save Successful!";
-                    HttpContext.Session.Remove("nameAdmin");
-                    HttpContext.Session.SetString("nameAdmin", name);
+                        var parameter = new[]
+                        {
+                                new SqlParameter("@name", name),
+                                new SqlParameter("@email", email),
+                            };
+                        ViewBag.isTrue = true;
+                        db.Database.ExecuteSqlRaw("UpdateAccountAdmin @name, @email", parameter);
+                        ViewBag.Success = "Save Successful!";
+                        HttpContext.Session.Remove("nameAdmin");
+                        HttpContext.Session.SetString("nameAdmin", name);
+                    }
+                    else
+                    {
+                        ViewBag.Error = "The name must be at least 8 characters long.";
+                        string newname = HttpContext.Session.GetString("nameAdmin");
+                        var check = db.Accounts.Where(x => x.Name == newname && x.Email == email).FirstOrDefault();
+                        return View(check);
+                    }
+                    
                 }
                 else
                 {
-                    ViewBag.Error = "The name aready exists!";
+                    ViewBag.Error = "the name is already exists!";
                     string newname = HttpContext.Session.GetString("nameAdmin");
                     var check = db.Accounts.Where(x => x.Name == newname && x.Email == email).FirstOrDefault();
                     return View(check);
