@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditQuestionContent">
+        <form asp-action="EditQuestionContent" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Contentid" />
             <div class="form-group">
@@ -20,9 +20,10 @@
                 <span asp-validation-for="QuestionsStyle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control" value="@Model.Picture" />
-                <span asp-validation-for="Picture" class="text-danger"></span>
+                <label asp-for="Picture">Choose Image</label>
+                <!-- Sử dụng một nút để mở dialog chọn file -->
+                <input type="file" id="imageFile" name="imageFile" accept=".jpg, .jpeg, .png" style="display: none;">
+                <button type="button" onclick="document.getElementById('imageFile').click()">Choose Image</button>
             </div>
             <div class="form-group">
                 <label asp-for="TextContent" class="control-label"></label>
@@ -30,26 +31,41 @@
                 <span asp-validation-for="TextContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Adudi" class="control-label"></label>
-                <input asp-for="Adudi" class="form-control" value="@Model.Adudi" />
-                <span asp-validation-for="Adudi" class="text-danger"></span>
+                <label asp-for="Adudi">Choose Audio File</label>
+                <input type="file" id="audioFile" name="audioFile" accept="audio/*" style="display: none;">
+                <button type="button" onclick="document.getElementById('audioFile').click()">Choose Audio File</button>
             </div>
             <div class="form-group">
                 <label asp-for="TextQuestionsbigIfhave" class="control-label"></label>
                 <input asp-for="TextQuestionsbigIfhave" class="form-control" value="@Model.TextQuestionsbigIfhave" />
                 <span asp-validation-for="TextQuestionsbigIfhave" class="text-danger"></span>
             </div>
-           
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
 </div>
 <a asp-action="Question_content" asp-route-id="@Model.Examid">Back to List</a>
 <div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+    <script>
+        // Lắng nghe sự kiện khi người dùng chọn file
+        document.getElementById('imageFile').addEventListener('change', function () {
+            // Lấy tên của file đã chọn
+            var fileName = this.files[0].name;
+            // Hiển thị tên file
+            document.getElementById('fileName').innerText = fileName;
+        });
+        document.getElementById('audioFile').addEventListener('change', function () {
+            // Lấy tên của file đã chọn
+            var fileName = this.files[0].name;
+            // Hiển thị tên file
+            document.getElementById('fileName').innerText = fileName;
+        });
+    </script>

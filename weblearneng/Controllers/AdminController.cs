@@ -9,16 +9,28 @@ using static Azure.Core.HttpHeader;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace weblearneng.Controllers
 {
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
+        public Cloudinary cloudinary;
+        public const string CLOUD_NAME = "dap6ivvwp";
+        public const string API_KEY = "875469923979388";
+        public const string API_SECRET = "sT_lEC69UilqcB6NB6Fhn6kaZqU";
         DatawebengContext dbcontext = new DatawebengContext();
         public AdminController(ILogger<AdminController> logger)
         {
             _logger = logger;
+        }
+
+        public void couldinaryStorage()
+        {
+            CloudinaryDotNet.Account account = new CloudinaryDotNet.Account(CLOUD_NAME, API_KEY, API_SECRET);
+            cloudinary = new CloudinaryDotNet.Cloudinary(account);
         }
 
         public IActionResult Index()
@@ -294,24 +306,84 @@ namespace weblearneng.Controllers
             }
         }
 
-        public IActionResult AddQuestioncontent(QuestionsContent questionsContent, int id)
+        // cloud 
+
+        private ImageUploadResult UploadImageToCloudinary(IFormFile file)
         {
-            string role = HttpContext.Session.GetString("Role");
-            if (questionsContent.TextContent != null)
+            using (var stream = file.OpenReadStream())
             {
-                using (var context = new DatawebengContext())
+                var uploadParams = new ImageUploadParams
                 {
-                    questionsContent.Examid = id;
-                    context.QuestionsContents.AddRange(questionsContent);
-                    context.SaveChanges();
+                    File = new FileDescription(file.FileName, stream),
+                    // Cấu hình các tham số tải lên ảnh tại đây nếu cần
+                };
+                // Thực hiện tải lên ảnh lên Cloudinary
+                //Object reference not set to an instance of an object.'
+                return cloudinary.Upload(uploadParams);
+            }
+        }
+        private VideoUploadResult UploadVideoToCloudinary(IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+            {
+                var uploadParams = new VideoUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    // Cấu hình các tham số tải lên ảnh tại đây nếu cần
+                };
+                // Thực hiện tải lên ảnh lên Cloudinary
+                //Object reference not set to an instance of an object.'
+                return cloudinary.Upload(uploadParams);
+            }
+        }
+        [RequestSizeLimit(5 * 1024 * 1024)]
+        public IActionResult AddQuestioncontent([Bind("QuestionsStyle,TextContent,Adudi,TextQuestionsbigIfhave")] QuestionsContent questionsContent, int id, IFormFile imageFile, IFormFile audioFile)
+        {
+            try
+            {
+                // Xử lý yêu cầu ở đây
+                if (questionsContent.TextContent != null)
+                {
+                    // Kiểm tra xem có tệp tin hình ảnh được tải lên không
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        couldinaryStorage();
+                        _logger.LogInformation("SecureUrl :ecureUrl");
+                        // Tải lên ảnh lên Cloudinary
+                        var uploadResult = UploadImageToCloudinary(imageFile);
+
+                        // Lưu URL của ảnh vào model
+                        questionsContent.Picture = uploadResult.SecureUrl.ToString();
+                        _logger.LogInformation("SecureUrl :{SecureUrl}", questionsContent.Picture);
+                    }
+                    if (audioFile != null && audioFile.Length > 0)
+                    {
+                        couldinaryStorage();
+                        _logger.LogInformation("SecureUrl :ecureUrl");
+                        // Tải lên ảnh lên Cloudinary
+                        var uploadResult = UploadVideoToCloudinary(audioFile);
+                        // Lưu URL của ảnh vào model
+                        questionsContent.Adudi = uploadResult.SecureUrl.ToString();
+                    }
+                    // Thêm nội dung câu hỏi vào cơ sở dữ liệu
+                    using (var context = new DatawebengContext())
+                    {
+                        questionsContent.Examid = id;
+                        context.QuestionsContents.Add(questionsContent);
+                        context.SaveChanges();
+                    }
                     return RedirectToAction("Question_content", "Admin", new { id = id });
                 }
+                ViewBag.idexam = id;
+                HttpContext.Session.SetInt32("idexam", id);
+                return View();
             }
-            ViewBag.idexam = id;
-            HttpContext.Session.SetInt32("idexam", id);
-            return View();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request");
+                throw;
+            }
         }
-
 
         public async Task<IActionResult> DeleteQuestioncontent(int? id)
         {
@@ -346,36 +418,52 @@ namespace weblearneng.Controllers
             return RedirectToAction("Question_content", "Admin", new { id = idexam });
         }
 
-        public async Task<IActionResult> EditQuestionContent([Bind("QuestionsStyle,Picture,TextContent,Adudi,TextQuestionsbigIfhave")] QuestionsContent questionsContent, int? id)
+        [RequestSizeLimit(5 * 1024 * 1024)]
+        public async Task<IActionResult> EditQuestionContent([Bind("QuestionsStyle,Picture,TextContent,Adudi,TextQuestionsbigIfhave")] QuestionsContent questionsContent, int? id, IFormFile imageFile, IFormFile audioFile)
         {
             var tmpe = await dbcontext.QuestionsContents.FindAsync(id);
             questionsContent.Examid = tmpe.Examid;
             if (questionsContent.TextContent != null)
             {
-                try
+                if (imageFile != null && imageFile.Length > 0)
                 {
-                    using (var context = new DatawebengContext())
-                    {
-                        questionsContent.Contentid = id ?? 0;
-                        context.Update(questionsContent);
-                        context.SaveChanges();
-                    }
+                    couldinaryStorage();
+                    // Tải lên ảnh lên Cloudinary
+                    var uploadResult = UploadImageToCloudinary(imageFile);
+                    // Lưu URL của ảnh vào model
+                    questionsContent.Picture = uploadResult.SecureUrl.ToString();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!QuestionsContentExists(questionsContent.Contentid))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    // Giữ nguyên ảnh cũ nếu không tải lên ảnh mới
+                    questionsContent.Picture = tmpe.Picture;
+                }
+                if (audioFile != null && audioFile.Length > 0)
+                {
+                    couldinaryStorage();
+                    // Tải lên audio lên Cloudinary
+                    var uploadResult = UploadVideoToCloudinary(audioFile);
+                    // Lưu URL của audio vào model
+                    questionsContent.Adudi = uploadResult.SecureUrl.ToString();
+                }
+                else
+                {
+                    // Giữ nguyên audio cũ nếu không tải lên audio mới
+                    questionsContent.Adudi = tmpe.Adudi;
+                }
+
+
+                using (var context = new DatawebengContext())
+                {
+                    questionsContent.Contentid = id ?? 0;
+                    context.Update(questionsContent);
+                    context.SaveChanges();
                 }
                 return RedirectToAction("Question_content", "Admin", new { id = tmpe.Examid });
             }
             return View(tmpe);
         }
+
         private bool QuestionsContentExists(int id)
         {
             return dbcontext.QuestionsContents.Any(e => e.Contentid == id);
@@ -393,7 +481,9 @@ namespace weblearneng.Controllers
             {
                 HttpContext.Session.SetInt32("idexam", id);
                 var questions = dbcontext.Questions.Where(p => p.Qcid == id).ToList();
+                var checkidquestioncontent = dbcontext.QuestionsContents.Where(x => x.Contentid == id).FirstOrDefault();
                 ViewBag.Idquestioncontent = id;
+                ViewBag.idexam = checkidquestioncontent.Examid;
                 return View(questions);
             }
             else
@@ -697,7 +787,7 @@ namespace weblearneng.Controllers
                 int pageSize = 6;
                 int pageNumber = page == null || pageSize < 1 ? 1 : page.Value;
                 var checkuser = dbcontext.Accounts.Where(x => x.Role == false).ToList();
-                PagedList<Account> lstVocabulary = new PagedList<Account>(checkuser, pageNumber, pageSize);
+                PagedList<Models.Account> lstVocabulary = new PagedList<Models.Account>(checkuser, pageNumber, pageSize);
                 return View(lstVocabulary);
             }
             else
@@ -731,7 +821,7 @@ namespace weblearneng.Controllers
                                     if (Regex.IsMatch(pass, "[!@#$%^&*(),.\"':{}|<>]"))
                                     {
                                         string passhash = CalculateMD5(pass);
-                                        var newaVoca = new Account()
+                                        var newaVoca = new Models.Account()
                                         {
                                             Name = name,
                                             Email = email,

@@ -1,89 +1,71 @@
 ﻿@model weblearneng.Models.QuestionsContent
+
 @{
     ViewData["Title"] = "AddQuestioncontent";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
 <h1>AddQuestioncontent</h1>
+
 <h4>QuestionsContent</h4>
 <hr />
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">DataTables</h6>
-    </div>
-    <div class="card-body">
-        <form asp-action="AddQuestioncontent">
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddQuestioncontent" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Style</th>
-                            <th>Picture</th>
-                            <th>Text Content</th>
-                            <th>Audio</th>
-                            <th>TextQuestionsbigIfhave</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Style</th>
-                            <th>Picture</th>
-                            <th>Text Content</th>
-                            <th>Audio</th>
-                            <th>TextQuestionsbigIfhave</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-
-                        <form asp-action="AddQuestion_content">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <td>
-                        <div class="form-group">
-                            <label asp-for="QuestionsStyle" class="control-label"></label>
-                            <input asp-for="QuestionsStyle" class="form-control" />
-                            <span asp-validation-for="QuestionsStyle" class="text-danger"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label asp-for="Picture" class="control-label"></label>"
-                            <input asp-for="Picture" class="form-control" placeholder="Link.."/>
-                            <span asp-validation-for="Picture" class="text-danger"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label asp-for="TextContent" class="control-label"></label>
-                            <input asp-for="TextContent" class="form-control" />
-                            <span asp-validation-for="TextContent" class="text-danger"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label asp-for="Adudi" class="control-label"></label>
-                            <input asp-for="Adudi" class="form-control" placeholder="Link.." />
-                            <span asp-validation-for="Adudi" class="text-danger"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label asp-for="TextQuestionsbigIfhave" class="control-label"></label>
-                            <input asp-for="TextQuestionsbigIfhave" class="form-control" />
-                            <span asp-validation-for="TextQuestionsbigIfhave" class="text-danger"></span>
-                        </div>
-                    </td>
+            <div class="form-group">
+                <label asp-for="QuestionsStyle" class="control-label"></label>
+                <input asp-for="QuestionsStyle" class="form-control" />
+                <span asp-validation-for="QuestionsStyle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Picture">Choose Image</label>
+                <!-- Sử dụng một nút để mở dialog chọn file -->
+                <input type="file" id="imageFile" name="imageFile" accept=".jpg, .jpeg, .png" style="display: none;">
+                <button type="button" onclick="document.getElementById('imageFile').click()">Choose Image</button>
+            </div>
+            <div class="form-group">
+                <label asp-for="TextContent" class="control-label"></label>
+                <input asp-for="TextContent" class="form-control" />
+                <span asp-validation-for="TextContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Adudi">Choose Audio File</label>
+                <input type="file" id="audioFile" name="audioFile" accept="audio/*" style="display: none;">
+                <button type="button" onclick="document.getElementById('audioFile').click()">Choose Audio File</button>
+            </div>
+            <div class="form-group">
+                <label asp-for="TextQuestionsbigIfhave" class="control-label"></label>
+                <input asp-for="TextQuestionsbigIfhave" class="form-control" />
+                <span asp-validation-for="TextQuestionsbigIfhave" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
         </form>
-        </tbody>
-        </table>
     </div>
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-    </form>
 </div>
-</div>
-<a asp-action="Question_content" asp-route-id="@ViewBag.idexam">Back to List</a>
 <div>
+    <a asp-action="Question_content" asp-route-id="@ViewBag.idexam">Back to List</a>
+</div>
+<script>
+    // Lắng nghe sự kiện khi người dùng chọn file
+    document.getElementById('imageFile').addEventListener('change', function () {
+        // Lấy tên của file đã chọn
+        var fileName = this.files[0].name;
+        // Hiển thị tên file
+        document.getElementById('fileName').innerText = fileName;
+    });
+    document.getElementById('audioFile').addEventListener('change', function () {
+        // Lấy tên của file đã chọn
+        var fileName = this.files[0].name;
+        // Hiển thị tên file
+        document.getElementById('fileName').innerText = fileName;
+    });
+</script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

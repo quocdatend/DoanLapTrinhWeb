@@ -67,7 +67,7 @@
                                 <td>
                                     <form asp-action="EditQuestion" asp-route-id="@item.QuestionId" method="post">
                                         <button type="submit"><i class="fas fa-edit"></i></button>
-                                    </form>                                   
+                                    </form>
                                     <form asp-action="DeleteQuestion" asp-route-id="@item.QuestionId" asp-route-idQ="@ViewBag.Idquestioncontent" method="post">
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                         <span asp-validation-for="@item.QuestionId" class="text-danger"></span>
@@ -85,6 +85,7 @@
             </div>
         </div>
     </div>
+    <a asp-action="Question_content" asp-route-id="@ViewBag.idexam">Back to List</a>
 </div>
 <script>
     // Optional confirmation dialog (consider user experience)
@@ -97,4 +98,3 @@
         });
     });
 </script>
-}
